@@ -13,15 +13,15 @@ type StringBuilder struct {
 }
 
 func NewStringBuilder() *StringBuilder {
-	builder1 := new(StringBuilder)
-	builder1.buffer = new(bytes.Buffer)
-	builder1.buffer.Grow(0xff)
+	b := new(StringBuilder)
+	b.buffer = new(bytes.Buffer)
+	b.buffer.Grow(0xff)
 
-	return builder1
+	return b
 }
 
-// 支持string, Error(), String(), int, int64, float64
-func (builder *StringBuilder) Append(a interface{}) {
+// 支持string, Error(), String(), int, int64, float64, bool
+func (b *StringBuilder) Append(a interface{}) {
 	var message1 string
 	switch a.(type) {
 	case string:
@@ -41,13 +41,13 @@ func (builder *StringBuilder) Append(a interface{}) {
 	default:
 		message1 = ""
 	}
-	if builder.buffer.Cap()-builder.buffer.Len() <= len(message1) {
-		builder.buffer.Grow(len(message1) + 0xff)
+	if b.buffer.Cap()-b.buffer.Len() <= len(message1) {
+		b.buffer.Grow(len(message1) + 0xff)
 	}
-	builder.buffer.WriteString(message1)
+	b.buffer.WriteString(message1)
 	return
 }
 
-func (builder *StringBuilder) String() string {
-	return builder.buffer.String()
+func (b *StringBuilder) String() string {
+	return b.buffer.String()
 }

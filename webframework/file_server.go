@@ -34,15 +34,13 @@ func (f *FileServer) Registry(prefix string, directory string) {
 }
 
 // 处理路由, 返回true表示继续路由
-func (f *FileServer) Process(w http.ResponseWriter, r *http.Request) bool {
+func (f *FileServer) process(w http.ResponseWriter, r *http.Request) bool {
 	for index, value := range f.prefixes {
 		if !strings.HasPrefix(r.URL.Path, value) {
 			continue
 		}
-		// 匹配成功
 		f.handlers[index].ServeHTTP(w, r)
 		return false
 	}
-	// 匹配不成功
 	return true
 }

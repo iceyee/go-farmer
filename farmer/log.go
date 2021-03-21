@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+// project - 项目名(string)
+// running - 控制监控的行为, 为true的时候表示通过(bool)
 var fileERROR *os.File
 var fileINFO *os.File
 var fileWARN *os.File
@@ -23,34 +25,44 @@ func init() {
 	loggerINFO = log.New(io.MultiWriter(os.Stdout), "\nINFO   ", log.LstdFlags)
 	loggerWARN = log.New(io.MultiWriter(os.Stdout), "\nWARN   ", log.LstdFlags)
 	loggerERROR = log.New(io.MultiWriter(os.Stderr), "\nERROR  ", log.LstdFlags)
+	go deleteOldFile()
+	go move()
+	go synchronize()
 	return
 }
 
 // 开启日志系统, 将Log记录到指定目录
 func OpenLog(projectName string) {
+	// fileInfo1 - /opt/farmer-log/ 目录信息(os.FileInfo)
+	// name1 - /opt/farmer-log/xxx/ 目标目录, 保存日志的位置(string)
+	// fileInfo2 - /opt/farmer-log/xxx/ 目录信息(os.FileInfo)
 	fileInfo1, e := os.Stat("/opt/farmer-log/")
 	if nil != e || !fileInfo1.IsDir() {
 		panic("缺少'/opt/farmer-log/'目录")
 	}
 	project = projectName
-	name := "/opt/farmer-log/" + project
-	stateLog, e := os.Stat(name)
+	name1 := "/opt/farmer-log/" + project
+	fileInfo2, e := os.Stat(name1)
 	if nil != e {
-		e = os.Mkdir(name, os.ModeDir|0755)
+		e = os.Mkdir(name1, os.ModeDir|0755)
 		if nil != e {
 			panic(e)
 		}
-	} else if !stateLog.IsDir() {
-		e = os.Remove(name)
+	} else if !fileInfo2.IsDir() {
+		e = os.Remove(name1)
 		if nil != e {
 			panic(e)
 		}
-		e = os.Mkdir(name, os.ModeDir|0755)
+		e = os.Mkdir(name1, os.ModeDir|0644)
 		if nil != e {
 			panic(e)
 		}
 	}
 
+	// warn1 - /opt/farmer-log/xxx/xxx-WARN.log (string)
+	// error1 - /opt/farmer-log/xxx/xxx-ERROR.log (string)
+	// fileWARN, fileERROR - (os.File)
+	// loggerINFO, loggerWARN, loggerERROR - (log.Logger)
 	loggerINFO = log.New(io.MultiWriter(os.Stdout), "\nINFO   ", log.LstdFlags)
 	warn1 := fmt.Sprintf("/opt/farmer-log/%s/%s-WARN.log", project, project)
 	fileWARN, e = os.OpenFile(warn1, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
@@ -68,9 +80,6 @@ func OpenLog(projectName string) {
 	fmt.Printf("OPENLOG('%s')!!!\n", project)
 
 	running = true
-	go deleteOldFile()
-	go move()
-	go synchronize()
 	return
 }
 
@@ -88,6 +97,7 @@ func CloseLog() {
 		fileERROR.Close()
 	}
 
+	running = false
 	return
 }
 
@@ -136,8 +146,17 @@ func Error(message interface{}) {
 // 删除7天前的日志
 func deleteOldFile() {
 	time.Sleep(1 * time.Second)
-	for running {
+	for true {
+		if !running {
+			time.Sleep(1 * time.Minute)
+			continue
+		}
 		func() {
+			// directory1 - /opt/farmer-log/项目名(string)
+			// state1 - /opt/farmer-log/项目名(os.FileInfo)
+			// now1 - 现在的时间戳, 单位:纳秒(int64)
+			// files1 - 一组文件信息([]os.FileInfo)
+			// file - /opt/farmer-log/项目名/xxx (os.FileInfo)
 			if "" == project {
 				return
 			}
@@ -145,16 +164,13 @@ func deleteOldFile() {
 			if nil != e {
 				panic(e)
 			}
-
 			state1, e := directory1.Stat()
 			if nil != e {
 				panic(e)
 			} else if !state1.IsDir() {
 				panic("Expected direcotry")
 			}
-
 			now1 := time.Now().UnixNano()
-
 			files1, e := directory1.Readdir(0)
 			for _, file := range files1 {
 				if file.IsDir() {
@@ -173,8 +189,18 @@ func deleteOldFile() {
 // 0:01 日志文件转移
 func move() {
 	time.Sleep(1 * time.Second)
-	for running {
+	for true {
+		if !running {
+			time.Sleep(1 * time.Minute)
+			continue
+		}
 		func() {
+			// now1 - 现在的时间(time.Time)
+			// date1 - 日期, 格式: 月-日, M-dd (string)
+			// warn1 - /opt/farmer-log/项目名/项目名-WARN.log (string)
+			// warn2 - /opt/farmer-log/项目名/项目名-WARN-日期.log (string)
+			// error1 - /opt/farmer-log/项目名/项目名-ERROR.log (string)
+			// error2 - /opt/farmer-log/项目名/项目名-ERROR-日期.log (string)
 			now1 := time.Now()
 			if "" == project {
 				return
@@ -187,7 +213,7 @@ func move() {
 			loggerERROR.SetOutput(os.Stdout)
 
 			now1 = now1.Add(-24 * time.Hour)
-			date1 := fmt.Sprintf("%d-%d", now1.Month(), now1.Day())
+			date1 := fmt.Sprintf("%d-%2d", now1.Month(), now1.Day())
 
 			fileWARN.Close()
 			fileERROR.Close()
@@ -223,7 +249,11 @@ func move() {
 // 把日志写到磁盘
 func synchronize() {
 	time.Sleep(1 * time.Second)
-	for running {
+	for true {
+		if !running {
+			time.Sleep(1 * time.Minute)
+			continue
+		}
 		func() {
 			if "" == project {
 				return

@@ -16,19 +16,18 @@ import (
 	"time"
 )
 
-// http://api.k780.com/?app=ip.local&appkey=10003&sign=b59bc3ef6191eb9f747dd4e83c99f2a4&format=json
 type Http struct {
-	body    []byte
-	e       error
-	header  map[string]string
-	method  string
-	proxy   string
-	url     string
-	verbose bool
+	body    []byte            // POST的内容
+	e       error             // 异常, 在Request()返回false后, 可调用GetError()获得异常结果
+	header  map[string]string // 请求头
+	method  string            // 请求方法
+	proxy   string            // 代理
+	url     string            // 链接
+	verbose bool              // 冗余模式
 
-	responseBody   []byte
-	responseHeader map[string][]string
-	statusCode     int
+	responseBody   []byte              // 响应内容
+	responseHeader map[string][]string // 响应头
+	statusCode     int                 // 状态码
 }
 
 func init() {
@@ -37,78 +36,80 @@ func init() {
 }
 
 func NewHttp() *Http {
-	http1 := new(Http)
-	http1.method = "GET"
-	http1.verbose = false
-	return http1
+	h := new(Http)
+	h.method = "GET"
+	h.verbose = false
+	return h
 }
 
-func (http1 *Http) SetBody(body []byte) {
-	http1.body = body
+func (h *Http) SetBody(body []byte) {
+	h.body = body
 	return
 }
 
-func (http1 *Http) SetHeader(header map[string]string) {
-	http1.header = header
+func (h *Http) SetHeader(header map[string]string) {
+	h.header = header
 	return
 }
 
-func (http1 *Http) SetMethod(method string) {
-	http1.method = method
+func (h *Http) SetMethod(method string) {
+	h.method = method
 	return
 }
 
 // @proxy: "", 或完整的代理, 如"socks://[user:password@]hk.farmer.ink:10002"
-func (http1 *Http) SetProxy(proxy string) {
-	http1.proxy = proxy
+func (h *Http) SetProxy(proxy string) {
+	h.proxy = proxy
 	return
 }
 
-func (http1 *Http) SetUrl(url string) {
-	http1.url = url
+func (h *Http) SetUrl(url string) {
+	h.url = url
 	return
 }
 
-func (http1 *Http) SetVerbose(verbose bool) {
-	http1.verbose = verbose
+func (h *Http) SetVerbose(verbose bool) {
+	h.verbose = verbose
 	return
 }
 
-func (http1 *Http) GetError() error {
-	return http1.e
+func (h *Http) GetError() error {
+	return h.e
 }
 
-func (http1 *Http) GetStatusCode() int {
-	return http1.statusCode
+func (h *Http) GetStatusCode() int {
+	return h.statusCode
 }
 
-func (http1 *Http) GetResponseHeader() map[string][]string {
-	return http1.responseHeader
+func (h *Http) GetResponseHeader() map[string][]string {
+	return h.responseHeader
 }
 
-func (http1 *Http) GetResponseBody() []byte {
-	return http1.responseBody
+func (h *Http) GetResponseBody() []byte {
+	return h.responseBody
 }
 
 // 发起请求, 其中URL是必须填的, 如果返回false, 则表示发生异常, 可以调用.GetError()获取异常.
 // 只有返回true的时候, .GetStatusCode(), .GetResponseHeader(), .GetResponseBody() 才会有效
-func (http1 *Http) Request() bool {
-	if "" == http1.url || "POST" == http1.method && nil == http1.body {
-		http1.e = NewFarmerError("参数不完整, 缺少url或body")
+func (h *Http) Request() bool {
+	if "" == h.url || "POST" == h.method && nil == h.body {
+		h.e = NewFarmerError("参数不完整, 缺少url或body")
 		return false
 	}
+	// body1 - POST内容(bytes.Reader)
+	// request1 - 请求(*http.Request)
 	var body1 io.Reader
-	if "POST" == http1.method && nil != http1.body {
-		body1 = bytes.NewReader(http1.body)
+	if "POST" == h.method && nil != h.body {
+		body1 = bytes.NewReader(h.body)
 	}
-	request1, e := http.NewRequest(http1.method, http1.url, body1)
+	request1, e := http.NewRequest(h.method, h.url, body1)
 	if nil != e {
-		http1.e = NewFarmerError(e)
+		h.e = NewFarmerError(e)
 		return false
 	}
 	request1.Close = true
-	if nil != http1.header {
-		for key, value := range http1.header {
+	if nil != h.header {
+		for key, value := range h.header {
 			request1.Header.Set(key, value)
 		}
 	}
@@ -124,71 +125,78 @@ func (http1 *Http) Request() bool {
 	if _, exists := request1.Header["X-Requested-With"]; !exists {
 		request1.Header.Set("X-Requested-With", "XMLHttpRequest")
 	}
-    if _, exists := request1.Header["X-Forwarded-For"]; !exists {
-        a := [8]byte{}
-        for index, _ := range a {
-            a[index] = byte(rand.Intn(256))
-        }
-        ip1 := net.IPv4(a[0], a[1], a[2], a[3]).String()
-        ip2 := net.IPv4(a[4], a[5], a[6], a[7]).String()
-        ip3 := fmt.Sprintf("%s, %s", ip1, ip2)
-        request1.Header.Set("X-Forwarded-For", ip3)
-    }
-	if http1.verbose {
-		println(">>>\n", http1.method, http1.url)
+	if _, exists := request1.Header["X-Forwarded-For"]; !exists {
+		// ip1, ip2, ip3 - IP, 临时变量
+		a := [8]byte{}
+		for index, _ := range a {
+			a[index] = byte(rand.Intn(256))
+		}
+		ip1 := net.IPv4(a[0], a[1], a[2], a[3]).String()
+		ip2 := net.IPv4(a[4], a[5], a[6], a[7]).String()
+		ip3 := fmt.Sprintf("%s, %s", ip1, ip2)
+		request1.Header.Set("X-Forwarded-For", ip3)
+	}
+	if h.verbose {
+		println(">>>\n", h.method, h.url)
 		for key, values := range request1.Header {
 			for _, value := range values {
 				println(key, ":", value)
 			}
 		}
 		println()
-		if nil != http1.body {
-			println(string(http1.body))
+		if nil != h.body {
+			println(string(h.body))
 		}
 	}
 
+	// client1 - (*http.Client)
+	// transport1 - (*http.Transport)
+	// response1 - (*http.Response)
 	client1 := new(http.Client)
 	client1.Timeout = 60 * time.Second
-	if "" != http1.proxy {
+	if "" != h.proxy {
 		transport1 := new(http.Transport)
 		transport1.Proxy = func(*http.Request) (*url.URL, error) {
-			return url.Parse(http1.proxy)
+			return url.Parse(h.proxy)
 		}
 		client1.Transport = transport1
 	}
 	response1, e := client1.Do(request1)
-
-	var data1 []byte
 	if nil != e {
-		http1.e = NewFarmerError(e)
+		h.e = NewFarmerError(e)
 		return false
 	} else {
+		// 请求成功, 开始处理数据
+		// data1 - 响应的内容([]byte)
+		// encodings1 - 响应头的Content-Encoding([]string)
+		// encoding1 - 响应头的Content-Encoding(string)
+		// gzipReader1 - (*gzip.Reader)
 		defer response1.Body.Close()
+		var data1 []byte
 		encodings1, exists := response1.Header["Content-Encoding"]
 		if exists {
 			encoding1 := strings.Join(encodings1, ",")
 			if strings.Contains(strings.ToLower(encoding1), "gzip") {
 				gzipReader1, e := gzip.NewReader(response1.Body)
 				if nil != e {
-					http1.e = NewFarmerError(e)
+					h.e = NewFarmerError(e)
 					return false
 				}
 				defer gzipReader1.Close()
-
 				data1, e = ioutil.ReadAll(gzipReader1)
 				if nil != e {
-					http1.e = NewFarmerError(e)
+					h.e = NewFarmerError(e)
 					return false
 				}
 			}
 		} else {
 			data1, e = ioutil.ReadAll(response1.Body)
 			if nil != e {
-				http1.e = NewFarmerError(e)
+				h.e = NewFarmerError(e)
 				return false
 			}
 		}
-		if http1.verbose {
+		if h.verbose {
 			println("\n<<<\n", response1.Status, response1.Proto)
 			for key, values := range response1.Header {
 				for _, value := range values {
@@ -198,9 +206,9 @@ func (http1 *Http) Request() bool {
 			println()
 			println(string(data1))
 		}
-		http1.statusCode = response1.StatusCode
-		http1.responseHeader = response1.Header
-		http1.responseBody = data1
+		h.statusCode = response1.StatusCode
+		h.responseHeader = response1.Header
+		h.responseBody = data1
 		return true
 	}
 }

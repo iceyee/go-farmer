@@ -3,7 +3,6 @@ package webframework
 import (
 	// TODO
 	//
-
 	"net/http"
 )
 
@@ -22,20 +21,6 @@ var InterceptorRegistryA *InterceptorRegistry
 func init() {
 	InterceptorRegistryA = new(InterceptorRegistry)
 	InterceptorRegistryA.interceptors = make([]Interceptor, 0, 0xf)
-
-	MethodInterceptorA = new(MethodInterceptor)
-	MethodInterceptorA.Method = make(map[string]bool, 0xff)
-	MethodInterceptorA.Method["CONNECT"] = false
-	MethodInterceptorA.Method["DELETE"] = false
-	MethodInterceptorA.Method["GET"] = true
-	MethodInterceptorA.Method["HEAD"] = false
-	MethodInterceptorA.Method["OPTIONS"] = false
-	MethodInterceptorA.Method["PATCH"] = false
-	MethodInterceptorA.Method["POST"] = true
-	MethodInterceptorA.Method["PUT"] = false
-	MethodInterceptorA.Method["TRACE"] = false
-
-	InterceptorRegistryA.Registry(MethodInterceptorA)
 	return
 }
 
@@ -46,7 +31,7 @@ func (i *InterceptorRegistry) Registry(interceptor Interceptor) {
 }
 
 // 处理路由, 返回true表示继续路由
-func (i *InterceptorRegistry) Process(w http.ResponseWriter, r *http.Request) bool {
+func (i *InterceptorRegistry) process(w http.ResponseWriter, r *http.Request) bool {
 	for _, interceptor := range i.interceptors {
 		if !interceptor.Process(w, r) {
 			return false

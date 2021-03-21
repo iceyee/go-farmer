@@ -5,28 +5,28 @@ import (
 //
 )
 
-// 信号量, 但是不能超过0xff
+// 信号量, 但是不能超过0xff, 基于chan来实现功能
 type Semaphore struct {
 	channel chan byte
 }
 
 func NewSemaphore(permits int) *Semaphore {
-	semaphore1 := new(Semaphore)
-	semaphore1.channel = make(chan byte, 0xff)
+	s := new(Semaphore)
+	s.channel = make(chan byte, 0xff)
 	for x := 0; x < permits; x++ {
-		semaphore1.channel <- 0
+		s.channel <- 0
 	}
-	return semaphore1
+	return s
 }
 
-func (semaphore *Semaphore) Acquire() bool {
-	_, ok := <-semaphore.channel
+func (s *Semaphore) Acquire() bool {
+	_, ok := <-s.channel
 	return ok
 }
 
-func (semaphore *Semaphore) AcquireN(n int) bool {
+func (s *Semaphore) AcquireN(n int) bool {
 	for x := 0; x < n; x++ {
-		_, ok := <-semaphore.channel
+		_, ok := <-s.channel
 		if !ok {
 			return false
 		}
@@ -34,36 +34,36 @@ func (semaphore *Semaphore) AcquireN(n int) bool {
 	return true
 }
 
-func (semaphore *Semaphore) AvailablePermits() int {
-	return len(semaphore.channel)
+func (s *Semaphore) AvailablePermits() int {
+	return len(s.channel)
 }
 
-func (semaphore *Semaphore) Release() {
-	semaphore.channel <- 0
+func (s *Semaphore) Release() {
+	s.channel <- 0
 	return
 }
 
-func (semaphore *Semaphore) ReleaseN(n int) {
+func (s *Semaphore) ReleaseN(n int) {
 	for x := 0; x < n; x++ {
-		semaphore.channel <- 0
+		s.channel <- 0
 	}
 	return
 }
 
-func (semaphore *Semaphore) TryAcquire() bool {
-	if 0 == len(semaphore.channel) {
+func (s *Semaphore) TryAcquire() bool {
+	if 0 == len(s.channel) {
 		return false
 	}
-	_, ok := <-semaphore.channel
+	_, ok := <-s.channel
 	return ok
 }
 
-func (semaphore *Semaphore) TryAcquireN(n int) bool {
+func (s *Semaphore) TryAcquireN(n int) bool {
 	for x := 0; x < n; x++ {
-		if len(semaphore.channel) < n-x {
+		if len(s.channel) < n-x {
 			return false
 		}
-		_, ok := <-semaphore.channel
+		_, ok := <-s.channel
 		if !ok {
 			return false
 		}

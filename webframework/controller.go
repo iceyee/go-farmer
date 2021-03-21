@@ -5,36 +5,38 @@ import (
 	//
 	"net/http"
 	"reflect"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
 const apiTemplate string = `
-    <table class="table mb-5">
+    <table class="table table-dark mb-5">
         <thead></thead>
         <tbody>
             <tr>
                 <th scope="row">Description</th>
-                <td>$Description</td>
+                <td>$$Description</td>
             </tr>
             <tr>
                 <th scope="row">Url</th>
-                <td>$Url</td>
+                <td>$$Url</td>
             </tr>
             <tr>
                 <th scope="row">Method</th>
-                <td>$Method</td>
+                <td>$$Method</td>
             </tr>
             <tr>
                 <th scope="row">Parameters</th>
-                <td>$Parameters</td>
+                <td>$$Parameters</td>
             </tr>
             <tr>
                 <th scope="row">Response</th>
-                <td>$Response</td>
+                <td>$$Response</td>
             </tr>
             <tr>
                 <th scope="row">Remarks</th>
-                <td>$Remarks</td>
+                <td>$$Remarks</td>
             </tr>
         </tbody>
     </table>
@@ -63,16 +65,13 @@ const apiTemplate2 string = `
 </html>
 `
 
-// 路由的规则是, 路径由方法名转换得到, 转小写, 把'_'换成'-', 即可得到路径,
-// 方法的参数必须是(http.ResponseWriter, *http.Request),
-// 需要继承这个类
-type Controller struct{}
+type Controller interface {
+	GetApi() []ApiDocument
+}
 
 type ControllerRegistry struct {
-	api         map[string]string
-	controllers []interface{}
-	document    string
-	router      map[string]reflect.Value
+	document string
+	router   map[string]ApiDocument
 }
 
 // 用于注册控制器
@@ -80,92 +79,269 @@ var ControllerRegistryA *ControllerRegistry
 
 func init() {
 	ControllerRegistryA = new(ControllerRegistry)
-	ControllerRegistryA.api = make(map[string]string, 0xff)
-	ControllerRegistryA.controllers = make([]interface{}, 0, 0xf)
-	ControllerRegistryA.router = make(map[string]reflect.Value, 0xff)
-	ControllerRegistryA.router["/api"] = reflect.ValueOf(api)
-	ControllerRegistryA.router["/status"] = reflect.ValueOf(status)
-	return
-}
-
-func api(w http.ResponseWriter, r *http.Request) {
-	if "" == ControllerRegistryA.document &&
-		0 < len(ControllerRegistryA.api) {
-		ControllerRegistryA.GenerateApiDocument()
+	ControllerRegistryA.router = make(map[string]ApiDocument, 0xff)
+	type A struct{}
+	ControllerRegistryA.router["/0/api"] = ApiDocument{
+		ArgumentType: reflect.TypeOf(*new(A)),
+		Key:          "api&status",
+		Method:       "GET, POST",
+		Url:          "",
+		a1:           make(map[string]map[string]interface{}, 0xf),
+		document:     "",
+		processor:    reflect.ValueOf(api),
 	}
-	w.Header().Set("Content-Type", "text/html")
-	_, e := w.Write([]byte(ControllerRegistryA.document))
-	if nil != e {
-		panic(e)
+	ControllerRegistryA.router["/0/status"] = ApiDocument{
+		ArgumentType: reflect.TypeOf(*new(A)),
+		Key:          "api&status",
+		Method:       "GET, POST",
+		Url:          "",
+		a1:           make(map[string]map[string]interface{}, 0xf),
+		document:     "",
+		processor:    reflect.ValueOf(status),
 	}
-	return
-}
 
-func status(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
 	return
 }
 
 // 注册控制器
-func (c *ControllerRegistry) Registry(controller interface{}) {
-	c.controllers = append(c.controllers, controller)
-	// 路由
-	for _, controller := range c.controllers {
-		type1 := reflect.TypeOf(controller)
-		value1 := reflect.ValueOf(controller)
-		for x := 0; x < type1.NumMethod(); x++ {
-			method1 := type1.Method(x)
-			methodDefinition1 := method1.Type.String()
-			if !strings.Contains(methodDefinition1, ", http.ResponseWriter, *http.Request)") {
-				continue
-			}
-			road1 := strings.ToLower(method1.Name)
-			road1 = strings.ReplaceAll(road1, "_", "-")
-			c.router["/"+road1] = value1.Method(x)
+func (c *ControllerRegistry) Registry(controller Controller) {
+	// api - ([]ApiDocument)
+	// type1 - Controller (reflect.Type)
+	// value1 - Controller (reflect.Value)
+	// name1 - Controller's Name (string)
+	// method1 - Controller.Method (reflect.Method)
+	api := controller.GetApi()
+	type1 := reflect.TypeOf(controller)
+	value1 := reflect.ValueOf(controller)
+	name1 := type1.String()
+	for x := 0; x < len(api); x++ {
+		if "" == api[x].Url {
+			panic(name1 + ", Url不能为空")
 		}
-	}
-	// 生成文档
-	for _, controller := range c.controllers {
-		type1 := reflect.TypeOf(controller)
-		value1 := reflect.ValueOf(controller)
-		for x := 0; x < type1.NumMethod(); x++ {
-			method1 := type1.Method(x)
-			methodDefinition1 := method1.Type.String()
-			if !strings.Contains(methodDefinition1, "ApiDocument") {
-				continue
-			}
-			apiDocument1 := value1.Method(x).Call([]reflect.Value{})[0].Interface().(ApiDocument)
-			var apiDocument2 string = apiTemplate
-			apiDocument2 = strings.Replace(apiDocument2, "$Description", apiDocument1.Description, -1)
-			apiDocument2 = strings.Replace(apiDocument2, "$Method", apiDocument1.Method, -1)
-			apiDocument2 = strings.Replace(apiDocument2, "$Parameters", apiDocument1.Parameters, -1)
-			apiDocument2 = strings.Replace(apiDocument2, "$Remarks", apiDocument1.Remarks, -1)
-			apiDocument2 = strings.Replace(apiDocument2, "$Response", apiDocument1.Response, -1)
-			apiDocument2 = strings.Replace(apiDocument2, "$Url", apiDocument1.Url, -1)
-			c.api[apiDocument1.Key] = apiDocument2
+		if "" == api[x].Method {
+			panic(name1 + ", Method不能为空")
 		}
-	}
-	return
-}
+		method1, ok := type1.MethodByName(api[x].MapTo)
+		if !ok {
+			panic(name1 + "." + api[x].MapTo + "(), 不存在这个方法")
+		}
+		expectedDefinition1 := "func(" + name1 + ", http.ResponseWriter, *http.Request, interface {})"
+		if method1.Type.String() != expectedDefinition1 {
+			panic(name1 + "." + method1.Name +
+				"(), 方法参数定义错误\n  预期 " + expectedDefinition1 +
+				"\n  实际 " + method1.Type.String())
+		}
+		api[x].processor = value1.MethodByName(api[x].MapTo)
 
-func (c *ControllerRegistry) GenerateApiDocument() {
-	var apiDocument3 string
-	for _, value := range c.api {
-		apiDocument3 = apiDocument3 + value
+		// field1 - api.ArgumentType.属性(reflect.StructField)
+		// tag1 - api.ArgumentType.属性.标签.web (string)
+		// a2 - 用于保存解析标签出来的子标签(map[string]interface{})
+		// a3 - 切割后的子标签集合([]string)
+		// a4 - 单个子标签(string)
+		// a5 - 切割子标签得集合, 两个元素([]string)
+		// a6 - 临时变量
+		api[x].a1 = make(map[string]map[string]interface{}, 0xf)
+		for y := 0; y < api[x].ArgumentType.NumField(); y++ {
+			field1 := api[x].ArgumentType.Field(y)
+			a2 := make(map[string]interface{}, 0xf)
+			api[x].a1[field1.Name] = a2
+			tag1 := field1.Tag.Get("web")
+			if "" == tag1 {
+				continue
+			}
+			a3 := strings.Split(tag1, "###")
+			for _, a4 := range a3 {
+				a4 = strings.Trim(a4, " ")
+				a5 := strings.Split(a4, ":")
+				if len(a5) < 2 {
+					panic(name1 + "." + field1.Name + ", 错误的标签")
+				}
+				a2[a5[0]] = strings.Join(a5[1:], ":")
+			}
+
+			if _, ok := a2["name"]; !ok {
+				panic(name1 + "." + field1.Name + ", 错误的标签")
+			}
+			if _, _1 := a2["require"]; !_1 {
+				if _, _2 := a2["default"]; !_2 {
+					panic(name1 + "." + field1.Name + ", 错误的标签, 不能同时没有require和default")
+				}
+			}
+			if _, ok := a2["type"]; !ok {
+				a2["type"] = "string"
+			} else {
+				switch a2["type"].(string) {
+
+				case "string":
+					a2["regexp"] = ""
+
+				case "int":
+					a2["regexp"] = `^[\+\-]?[0-9]+$`
+
+				case "hex":
+					a2["regexp"] = `^[0-9a-fA-F]+$|^0x[0-9a-fA-F]+$`
+
+				case "float":
+					a2["regexp"] = `^[\+\-]?[0-9]+$|^[\+\-]?[0-9]*\.[0-9]*$|^[\+\-]?[0-9]*\.[0-9]*[eE][\+\-][0-9]+$`
+
+				case "bool":
+					a2["regexp"] = `^true$|^false$`
+
+				case "email":
+					a2["regexp"] = `^[0-9a-zA-Z_\-\.]+@[0-9a-zA-Z]+\.[a-zA-Z]+$`
+
+				case "pattern":
+					if _, ok := a2["regexp"]; !ok {
+						panic(name1 + "." + field1.Name + ", 错误的标签")
+					}
+					if _, e := regexp.CompilePOSIX(a2["regexp"].(string)); nil != e {
+						panic(name1 + "." + field1.Name + ", 错误的标签\n" + e.Error())
+					}
+
+				default:
+					panic(name1 + "." + field1.Name + ", 错误的标签")
+				}
+			}
+
+			// 生成文档
+			if true {
+				api[x].parameters = api[x].parameters + a2["name"].(string) + " - "
+				if _, ok := a2["require"]; ok {
+					api[x].parameters = api[x].parameters + "必须"
+				} else {
+					api[x].parameters = api[x].parameters + "可选"
+				}
+				if a6, ok := a2["description"]; ok {
+					api[x].parameters = api[x].parameters + ", " + a6.(string)
+				}
+				api[x].parameters = api[x].parameters + ", 类型是" + a2["type"].(string)
+				if "pattern" == a2["type"].(string) {
+					api[x].parameters = api[x].parameters + ", 正则表达式" + a2["regexp"].(string)
+				}
+				if a6, ok := a2["max"]; ok {
+					api[x].parameters = api[x].parameters + ", 最大" + a6.(string)
+				}
+				if a6, ok := a2["min"]; ok {
+					api[x].parameters = api[x].parameters + ", 最小" + a6.(string)
+				}
+				if a6, ok := a2["not"]; ok {
+					api[x].parameters = api[x].parameters + ", 不能是" + a6.(string)
+				}
+				if a6, ok := a2["default"]; ok {
+					api[x].parameters = api[x].parameters + ", 默认" + a6.(string)
+				}
+				api[x].parameters = api[x].parameters + "\n"
+			}
+
+			if a6, ok := a2["max"]; ok {
+				if "hex" == a2["type"].(string) {
+					if strings.HasPrefix(a6.(string), "0x") &&
+						2 <= len(a6.(string)) {
+						a6 = a6.(string)[2:]
+					}
+					a7, e := strconv.ParseInt(a6.(string), 16, 64)
+					if nil != e {
+						panic(name1 + "." + field1.Name + ", 错误的标签\n" + e.Error())
+					}
+					a2["max"] = float64(a7)
+				} else {
+					a7, e := strconv.ParseFloat(a6.(string), 64)
+					if nil != e {
+						panic(name1 + "." + field1.Name + ", 错误的标签\n" + e.Error())
+					}
+					a2["max"] = a7
+				}
+			}
+			if a6, ok := a2["min"]; ok {
+				if "hex" == a2["type"].(string) {
+					if strings.HasPrefix(a6.(string), "0x") &&
+						2 <= len(a6.(string)) {
+						a6 = a6.(string)[2:]
+					}
+					a7, e := strconv.ParseInt(a6.(string), 16, 64)
+					if nil != e {
+						panic(name1 + "." + field1.Name + ", 错误的标签\n" + e.Error())
+					}
+					a2["min"] = float64(a7)
+				} else {
+					a7, e := strconv.ParseFloat(a6.(string), 64)
+					if nil != e {
+						panic(name1 + "." + field1.Name + ", 错误的标签\n" + e.Error())
+					}
+					a2["min"] = a7
+				}
+			}
+		}
+		api[x].parameters = strings.Replace(api[x].parameters, "&", "&amp;", -1)
+		api[x].parameters = strings.Replace(api[x].parameters, "<", "&lt;", -1)
+		api[x].parameters = strings.Replace(api[x].parameters, ">", "&gt;", -1)
+		api[x].parameters = strings.Replace(api[x].parameters, "\n", "<br>", -1)
+		api[x].document = apiTemplate
+		api[x].document = strings.Replace(api[x].document, "$$Description", api[x].Description, -1)
+		api[x].document = strings.Replace(api[x].document, "$$Method", api[x].Method, -1)
+		api[x].document = strings.Replace(api[x].document, "$$Parameters", api[x].parameters, -1)
+		api[x].document = strings.Replace(api[x].document, "$$Remarks", api[x].Remarks, -1)
+		api[x].document = strings.Replace(api[x].document, "$$Response", api[x].Response, -1)
+		api[x].document = strings.Replace(api[x].document, "$$Url", api[x].Url, -1)
+		c.router[api[x].Url] = api[x]
 	}
-	c.document = strings.Replace(apiTemplate2, "$$", apiDocument3, -1)
 	return
 }
 
 // 处理路由, 返回true表示继续路由
-func (c *ControllerRegistry) Process(w http.ResponseWriter, r *http.Request) bool {
-	method1, ok := c.router[r.URL.Path]
+func (c *ControllerRegistry) process(w http.ResponseWriter, r *http.Request) bool {
+	apiDocument, ok := c.router[r.URL.Path]
 	if ok {
 		// 匹配成功
-		method1.Call([]reflect.Value{reflect.ValueOf(w), reflect.ValueOf(r)})
+		if !strings.Contains(apiDocument.Method, r.Method) {
+			http.Error(w, "禁止的请求方法", 405)
+			return false
+		}
+		arg, ok, e := c.validate(w, r, apiDocument)
+		if nil != e {
+			http.Error(w, e.Error(), 400)
+			println(e.Error())
+		} else if !ok {
+		} else {
+			apiDocument.processor.Call([]reflect.Value{
+				reflect.ValueOf(w),
+				reflect.ValueOf(r),
+				reflect.ValueOf(arg)})
+		}
 		return false
 	} else {
 		// 匹配不成功
 		return true
 	}
+}
+
+func api(w http.ResponseWriter, r *http.Request, arg interface{}) {
+	if "" == ControllerRegistryA.document {
+		// 没文档
+		if len(ControllerRegistryA.router) <= 1 {
+			w.Header().Set("Content-Type", "text/html")
+			w.Write([]byte(""))
+			return
+		} else {
+			// 有api
+			// 开始生成
+			var a1 map[string]string = make(map[string]string, 4*len(ControllerRegistryA.router))
+			var a2 string
+			for key, value := range ControllerRegistryA.router {
+				a1[key] = value.document
+			}
+			for _, value := range a1 {
+				a2 = a2 + value
+			}
+			ControllerRegistryA.document = strings.Replace(apiTemplate2, "$$", a2, -1)
+		}
+	}
+	w.Header().Set("Content-Type", "text/html")
+	w.Write([]byte(ControllerRegistryA.document))
+	return
+}
+
+func status(w http.ResponseWriter, r *http.Request, arg interface{}) {
+	w.Write([]byte("ok"))
+	return
 }

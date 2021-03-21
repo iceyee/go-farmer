@@ -12,7 +12,7 @@ type FarmerError struct {
 	message string
 }
 
-// 生成异常
+// 生成异常, 包含有栈的信息
 func NewFarmerError(message interface{}) *FarmerError {
 	var message1 string
 	switch message.(type) {
