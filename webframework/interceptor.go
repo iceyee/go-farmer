@@ -4,6 +4,7 @@ import (
 	// TODO
 	//
 	"net/http"
+	"strings"
 )
 
 // r.URL.Path
@@ -21,6 +22,11 @@ var InterceptorRegistryA *InterceptorRegistry
 func init() {
 	InterceptorRegistryA = new(InterceptorRegistry)
 	InterceptorRegistryA.interceptors = make([]Interceptor, 0, 0xf)
+
+	domainInterceptorA = new(domainInterceptor)
+	domainInterceptorA.domains = make([]string, 0, 0xf)
+	domainInterceptorA.domains = append(domainInterceptorA.domains, "localhost")
+	InterceptorRegistryA.Registry(domainInterceptorA)
 	return
 }
 
@@ -38,4 +44,30 @@ func (i *InterceptorRegistry) process(w http.ResponseWriter, r *http.Request) bo
 		}
 	}
 	return true
+}
+
+type domainInterceptor struct {
+	domains []string
+}
+
+var domainInterceptorA *domainInterceptor
+
+func (i *domainInterceptor) Process(w http.ResponseWriter, r *http.Request) bool {
+	r.Host = strings.ToLower(r.Host)
+	for _, value := range i.domains {
+		if strings.Contains(r.Host, value) {
+			return true
+		}
+	}
+	http.Error(w, "非法请求", 403)
+	return false
+}
+
+// 授权域名, 允许通过指定域名访问, 默认只允许通过localhost访问.
+func AuthorizeDomain(domain string) {
+	if strings.Contains(strings.Join(domainInterceptorA.domains, ","), domain) {
+		return
+	}
+	domainInterceptorA.domains = append(domainInterceptorA.domains, domain)
+	return
 }

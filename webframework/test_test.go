@@ -63,6 +63,7 @@ func (c *farmerController) A(w http.ResponseWriter, r *http.Request, arg interfa
 }
 
 func Test(t *testing.T) {
+    AuthorizeDomain("farmer.ink")
 	InterceptorRegistryA.Registry(new(farmerInterceptor))
 	ControllerRegistryA.Registry(new(farmerController))
 	FileServerA.Registry("/tmp/", "/tmp/")

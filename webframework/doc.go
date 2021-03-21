@@ -2,10 +2,11 @@
 //
 /*
 使用这个框架的几个步骤:
-  1. 设置拦截器. InterceptorRegistryA.Registry()
-  2. 设置控制器. ControllerRegistryA.Registry()
-  3. 设置文件服务器. FileServerA.Registry()
-  4. 启动. Listen()
+  1. 授权域名访问. AuthorizeDomain()
+  2. 设置拦截器. InterceptorRegistryA.Registry()
+  3. 设置控制器. ControllerRegistryA.Registry()
+  4. 设置文件服务器. FileServerA.Registry()
+  5. 启动. Listen()
 
 有一些已经设置好的行为, /0/api是查看文档的, /0/status是查看服务器状态.
 
@@ -90,7 +91,8 @@ Example Of FileServer
 
 Starting
 
-最后一步, 注册拦截器, 控制器, 文件服务器, 并启动, 示例如下:
+最后一步, 授权域名访问, 注册拦截器, 控制器, 文件服务器, 并启动, 示例如下:
+    AuthorizeDomain("farmer.ink")
     InterceptorRegistryA.Registry(new(farmerInterceptor))
     ControllerRegistryA.Registry(new(farmerController))
     FileServerA.Registry("/", "/tmp/")

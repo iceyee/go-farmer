@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-// 给客户端返回Json数据
+// 向客户端输出Json数据, data是一个指针(*struct)
 func WriteJson(w http.ResponseWriter, data interface{}) error {
 	// bytes1 - data经由json编码得到([]byte)
 	bytes1, e := json.Marshal(data)
