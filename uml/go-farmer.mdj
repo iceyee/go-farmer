@@ -3531,7 +3531,7 @@
 											"font": "Arial;13;1",
 											"left": 325,
 											"top": 207,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "A1"
 										},
@@ -3566,7 +3566,7 @@
 									"font": "Arial;13;0",
 									"left": 320,
 									"top": 200,
-									"width": 126.6953125,
+									"width": 103.5771484375,
 									"height": 25,
 									"stereotypeLabel": {
 										"$ref": "AAAAAAF4UQDxeN3o6zE="
@@ -3603,7 +3603,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 230,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+name    string",
 											"horizontalAlignment": 0
@@ -3621,7 +3621,7 @@
 											"showShadow": false,
 											"left": 325,
 											"top": 245,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+require    any",
 											"horizontalAlignment": 0
@@ -3639,9 +3639,9 @@
 											"showShadow": false,
 											"left": 325,
 											"top": 260,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
-											"text": "+description    string",
+											"text": "+desc    string",
 											"horizontalAlignment": 0
 										},
 										{
@@ -3656,7 +3656,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 275,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+type    string",
 											"horizontalAlignment": 0
@@ -3673,7 +3673,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 290,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+regexp    string",
 											"horizontalAlignment": 0
@@ -3690,7 +3690,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 305,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+max    float64",
 											"horizontalAlignment": 0
@@ -3707,7 +3707,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 320,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+min    float64",
 											"horizontalAlignment": 0
@@ -3724,7 +3724,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 335,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+not    string",
 											"horizontalAlignment": 0
@@ -3741,7 +3741,7 @@
 											"font": "Arial;13;0",
 											"left": 325,
 											"top": 350,
-											"width": 116.6953125,
+											"width": 93.5771484375,
 											"height": 13,
 											"text": "+default    string",
 											"horizontalAlignment": 0
@@ -3750,7 +3750,7 @@
 									"font": "Arial;13;0",
 									"left": 320,
 									"top": 225,
-									"width": 126.6953125,
+									"width": 103.5771484375,
 									"height": 143
 								},
 								{
@@ -3765,7 +3765,7 @@
 									"font": "Arial;13;0",
 									"left": 320,
 									"top": 368,
-									"width": 126.6953125,
+									"width": 103.5771484375,
 									"height": 10
 								},
 								{
@@ -3806,7 +3806,7 @@
 							"containerChangeable": true,
 							"left": 320,
 							"top": 200,
-							"width": 126.6953125,
+							"width": 103.5771484375,
 							"height": 178,
 							"autoResize": true,
 							"nameCompartment": {
@@ -3838,7 +3838,7 @@
 							"width": 308.24090576171875,
 							"height": 190,
 							"autoResize": true,
-							"text": "这是对ApiDocument.A1的说明, \n    是由ApiDocument.ArgumentType处理得到, \nrequire: 必须\nname: 属性名\ntype: 预期类型, 包括string,int,hex,float,\n    bool,email,pattern, 默认string\nregexp: 正则表达式, 只有在type是pattern时才有效\nmax: 最大值\nmin: 最小值\nnot: 不等于\ndefault: 默认值, 如果没有require则必须有default\ndescription: 对这个参数的描述",
+							"text": "这是对ApiDocument.A1的说明, \n    是由ApiDocument.ArgumentType处理得到, \nrequire: 必须\nname: 属性名\ntype: 预期类型, 包括string,int,hex,float,\n    bool,email,pattern, 默认string\nregexp: 正则表达式, 只有在type是pattern时才有效\nmax: 最大值\nmin: 最小值\nnot: 不等于\ndefault: 默认值, 如果没有require则必须有default\ndesc: 对这个参数的描述",
 							"wordWrap": false
 						},
 						{
@@ -3856,7 +3856,7 @@
 								"$ref": "AAAAAAF4UQDxeN3mfHU="
 							},
 							"lineStyle": 1,
-							"points": "447:290;471:290"
+							"points": "424:289;471:290"
 						},
 						{
 							"_type": "UMLAssociationView",
@@ -3880,7 +3880,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 310,
-									"top": 221,
+									"top": 226,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -3901,7 +3901,7 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"left": 318,
-									"top": 208,
+									"top": 213,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -3922,7 +3922,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 295,
-									"top": 246,
+									"top": 251,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -3943,7 +3943,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 316,
-									"top": 225,
+									"top": 230,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -3964,7 +3964,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 325,
-									"top": 215,
+									"top": 220,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -3984,8 +3984,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 299,
-									"top": 246,
+									"left": 298,
+									"top": 251,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -4006,7 +4006,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 304,
-									"top": 217,
+									"top": 222,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -4025,8 +4025,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 309,
-									"top": 205,
+									"left": 310,
+									"top": 210,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -4046,7 +4046,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 294,
-									"top": 243,
+									"top": 248,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 25,
@@ -4094,7 +4094,7 @@
 								"$ref": "AAAAAAF4UMdogENHKbs="
 							},
 							"lineStyle": 1,
-							"points": "287:231;319:250",
+							"points": "287:235;319:255",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAF4UQeBuPGoGJ4="
@@ -4129,6 +4129,22 @@
 							"headQualifiersCompartment": {
 								"$ref": "AAAAAAF4UQeBuPGy4dI="
 							}
+						},
+						{
+							"_type": "UMLNoteView",
+							"_id": "AAAAAAF4Xzfs7RQv8tY=",
+							"_parent": {
+								"$ref": "AAAAAAF4UMWwpUM2HBQ="
+							},
+							"font": "Arial;13;0",
+							"showShadow": false,
+							"left": 8,
+							"top": 1144,
+							"width": 727.0274047851562,
+							"height": 100,
+							"autoResize": true,
+							"text": "Url的定义如下:\ntype t4715 struct {\n    A string `web:\" name:A ###require: ###desc:描述1 ###type:string ###not:hello \"`\n    B int64  `web:\" name:b ###desc:这个要求是十六进制数 ###type:hex ###max:0xff ###min:0x2 ###not:50 ###default:0xf\"`\n    C bool   `web:\" name:c ###type:bool ###default:false \"`\n}",
+							"wordWrap": false
 						}
 					]
 				},
@@ -4908,8 +4924,7 @@
 							"_parent": {
 								"$ref": "AAAAAAF4UQDxd93khgk="
 							},
-							"name": "description    string",
-							"type": ""
+							"name": "desc    string"
 						},
 						{
 							"_type": "UMLAttribute",
@@ -6669,7 +6684,7 @@
 									"top": 482,
 									"width": 130.00015258789062,
 									"height": 65,
-									"text": "依次检查name, require, description, type, regexp, max, min, not, default, 生成对这个属性的说明",
+									"text": "依次检查name, require, desc, type, regexp, max, min, not, default, 生成对这个属性的说明",
 									"wordWrap": true
 								}
 							],
@@ -7905,7 +7920,7 @@
 					"_parent": {
 						"$ref": "AAAAAAF4UeQUrHTBB1c="
 					},
-					"name": "依次检查name, require, description, type, regexp, max, min, not, default, 生成对这个属性的说明"
+					"name": "依次检查name, require, desc, type, regexp, max, min, not, default, 生成对这个属性的说明"
 				},
 				{
 					"_type": "FCProcess",

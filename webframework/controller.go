@@ -83,7 +83,7 @@ func init() {
 	type A struct{}
 	ControllerRegistryA.router["/0/api"] = ApiDocument{
 		ArgumentType: reflect.TypeOf(*new(A)),
-		Key:          "api&status",
+		Key:          "api&api",
 		Method:       "GET, POST",
 		Url:          "",
 		a1:           make(map[string]map[string]interface{}, 0xf),
@@ -211,7 +211,7 @@ func (c *ControllerRegistry) Registry(controller Controller) {
 				} else {
 					api[x].parameters = api[x].parameters + "可选"
 				}
-				if a6, ok := a2["description"]; ok {
+				if a6, ok := a2["desc"]; ok {
 					api[x].parameters = api[x].parameters + ", " + a6.(string)
 				}
 				api[x].parameters = api[x].parameters + ", 类型是" + a2["type"].(string)

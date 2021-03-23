@@ -1,9 +1,9 @@
 package farmer
 
 import (
-	// TODO
-	//
+	"math/rand"
 	"testing"
+	//
 )
 
 func TestFarmerError(t *testing.T) {

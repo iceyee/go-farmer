@@ -51,8 +51,8 @@ Example Of Controller
     }
 
     type t4715 struct {
-        A string `web:" name:A ### require: ### description:描述1 ### type:string ### not:hello "`
-        B int64  `web:" name:b ### description:这个要求是十六进制数 ### type:hex ### max:0xff ### min:0x2 ### not:50 ### default:0xf"`
+        A string `web:" name:A ### require: ### desc:描述1 ### type:string ### not:hello "`
+        B int64  `web:" name:b ### desc:这个要求是十六进制数 ### type:hex ### max:0xff ### min:0x2 ### not:50 ### default:0xf"`
         C bool   `web:" name:c ### type:bool ### default:false "`
     }
 

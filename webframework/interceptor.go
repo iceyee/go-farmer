@@ -26,6 +26,7 @@ func init() {
 	domainInterceptorA = new(domainInterceptor)
 	domainInterceptorA.domains = make([]string, 0, 0xf)
 	domainInterceptorA.domains = append(domainInterceptorA.domains, "localhost")
+    domainInterceptorA.domains = append(domainInterceptorA.domains, "127.0.0.1")
 	InterceptorRegistryA.Registry(domainInterceptorA)
 	return
 }
