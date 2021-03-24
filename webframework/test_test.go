@@ -70,7 +70,7 @@ func Test(t *testing.T) {
 	InterceptorRegistryA.Registry(new(farmerInterceptor))
 	ControllerRegistryA.Registry(new(farmerController))
 	FileServerA.Registry("/tmp/", "/tmp/")
-	// Listen(":8888")
+    // Listen(":8888")
 
 	// 开始测试
 	var server1 = httptest.NewServer(new(server))

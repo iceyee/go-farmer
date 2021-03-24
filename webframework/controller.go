@@ -325,15 +325,18 @@ func api(w http.ResponseWriter, r *http.Request, arg interface{}) {
 		} else {
 			// 有api
 			// 开始生成
-			var a1 map[string]string = make(map[string]string, 4*len(ControllerRegistryA.router))
-			var a2 string
+			var a1 = make(map[string]string, 4*len(ControllerRegistryA.router))
+			var a2 = make([]string, 0, len(ControllerRegistryA.router))
+			var a3 = ""
 			for key, value := range ControllerRegistryA.router {
 				a1[key] = value.document
+				a2 = append(a2, key)
 			}
-			for _, value := range a1 {
-				a2 = a2 + value
+			for index, value := range a2 {
+                a3 = a3 + a1[value]
+				_ = index
 			}
-			ControllerRegistryA.document = strings.Replace(apiTemplate2, "$$", a2, -1)
+			ControllerRegistryA.document = strings.Replace(apiTemplate2, "$$", a3, -1)
 		}
 	}
 	w.Header().Set("Content-Type", "text/html")

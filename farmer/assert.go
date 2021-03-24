@@ -1,13 +1,22 @@
 package farmer
 
 import (
-// TODO
-//
+	"log"
+	"runtime/debug"
+	//
 )
 
 func Assert(condition bool) {
 	if !condition {
-		panic("断言失败")
+		var message = "断言失败\n" + string(debug.Stack())
+		log.Fatalln(message)
+	}
+	return
+}
+
+func CheckError(e error) {
+	if nil != e {
+		log.Fatalln(e)
 	}
 	return
 }
