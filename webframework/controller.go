@@ -1,6 +1,7 @@
 package webframework
 
 import (
+	"sort"
 	// TODO
 	//
 	"net/http"
@@ -332,8 +333,9 @@ func api(w http.ResponseWriter, r *http.Request, arg interface{}) {
 				a1[key] = value.document
 				a2 = append(a2, key)
 			}
+			sort.Strings(a2)
 			for index, value := range a2 {
-                a3 = a3 + a1[value]
+				a3 = a3 + a1[value]
 				_ = index
 			}
 			ControllerRegistryA.document = strings.Replace(apiTemplate2, "$$", a3, -1)
