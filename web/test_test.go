@@ -65,7 +65,7 @@ func (c *farmerController) A(w http.ResponseWriter, r *http.Request, arg interfa
 	return
 }
 
-func Test(t *testing.T) {
+func test1(t *testing.T) {
 	InterceptorRegistryA.Registry(new(farmerInterceptor))
 	ControllerRegistryA.Registry(new(farmerController))
 	FileServerA.Registry("/tmp/", "/tmp/")

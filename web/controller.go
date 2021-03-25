@@ -1,10 +1,10 @@
 package web
 
 import (
-	"sort"
 	"net/http"
 	"reflect"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	//
@@ -326,15 +326,17 @@ func api(w http.ResponseWriter, r *http.Request, arg interface{}) {
 			// 有api
 			// 开始生成
 			var a1 = make(map[string]string, 4*len(ControllerRegistryA.router))
-			var a2 = make([]string, 0, len(ControllerRegistryA.router))
+			var a2 = make(map[string]string, 4*len(ControllerRegistryA.router))
 			var a3 = ""
+			var a4 = make([]string, 0, len(ControllerRegistryA.router))
 			for key, value := range ControllerRegistryA.router {
 				a1[key] = value.document
-				a2 = append(a2, key)
+				a2[value.Key] = key
+				a4 = append(a4, value.Key)
 			}
-			sort.Strings(a2)
-			for index, value := range a2 {
-				a3 = a3 + a1[value]
+			sort.Strings(a4)
+			for index, value := range a4 {
+				a3 = a3 + a1[a2[value]]
 				_ = index
 			}
 			ControllerRegistryA.document = strings.Replace(apiTemplate2, "$$", a3, -1)

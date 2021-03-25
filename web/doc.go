@@ -12,7 +12,7 @@
 
 定义Url参数的标签, 用###间隔, 支持的关键字如下:
   default - 默认值
-  description - 对这个参数的说明, 在生成api文档时用到
+  desc - 对这个参数的说明, 在生成api文档时用到
   max - 最大值
   min - 最小值
   name - url参数的名字, 必须
