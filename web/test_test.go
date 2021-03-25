@@ -72,7 +72,7 @@ func test1(t *testing.T) {
 	// Listen(":8888")
 
 	// 开始测试
-	var server1 = httptest.NewServer(new(server))
+	var server1 = httptest.NewServer(new(Server))
 	defer server1.Close()
 
 	// 测试域名访问的功能, 不允许test.farmer.ink

@@ -6,9 +6,9 @@ import (
 	//
 )
 
-type server struct{}
+type Server struct{}
 
-func (s *server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	e := r.ParseForm()
 	if nil != e {
 		http.Error(w, farmer.NewFarmerError(e).Error(), 500)
