@@ -1,4 +1,4 @@
-package crudrepository
+package crud
 
 import (
 	"database/sql"

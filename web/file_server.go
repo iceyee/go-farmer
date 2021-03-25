@@ -1,10 +1,9 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"net/http"
 	"strings"
+	//
 )
 
 // 文件服务器, 用于处理静态文件

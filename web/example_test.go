@@ -1,7 +1,6 @@
-package webframework
+package web
 
 import (
-// TODO
 //
 )
 

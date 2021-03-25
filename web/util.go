@@ -1,11 +1,10 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"encoding/json"
 	"github.com/iceyee/go-farmer/farmer"
 	"net/http"
+	//
 )
 
 // 向客户端输出Json数据, data是一个指针(*struct)

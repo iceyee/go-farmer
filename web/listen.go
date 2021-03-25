@@ -1,9 +1,8 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"net/http"
+	//
 )
 
 // 启动服务器

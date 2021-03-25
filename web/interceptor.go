@@ -1,10 +1,9 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"net/http"
 	"strings"
+	//
 )
 
 // r.URL.Path

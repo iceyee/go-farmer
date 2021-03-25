@@ -1,14 +1,13 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"github.com/iceyee/go-farmer/farmer"
 	"net/http"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
+	//
 )
 
 // 验证表单并生成参数. 因为要配合ControllerRegistry用, 所以是不公开的.

@@ -1,10 +1,9 @@
-package webframework
+package web
 
 import (
-	// TODO
-	//
 	"github.com/iceyee/go-farmer/farmer"
 	"net/http"
+	//
 )
 
 type server struct{}

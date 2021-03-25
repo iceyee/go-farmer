@@ -100,4 +100,4 @@ Starting
 
 这时, 访问/localhost:8888/0/status可以看到服务器状态, 访问/localhost:8888/0/api可以看到服务器所有的api
 */
-package webframework
+package web

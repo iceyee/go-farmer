@@ -1,14 +1,13 @@
-package webframework
+package web
 
 import (
 	"sort"
-	// TODO
-	//
 	"net/http"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
+	//
 )
 
 const apiTemplate string = `
