@@ -25,7 +25,7 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 		value1 := r.FormValue(value["name"].(string))
 		if "" == value1 {
 			if _, ok := value["require"]; ok {
-				http.Error(w, "错误的参数, "+value["name"].(string), 400)
+				http.Error(w, "错误的参数, require, "+value["name"].(string), 400)
 				return nil, false, nil
 			} else if _, ok := value["default"]; !ok {
 				continue
@@ -38,7 +38,7 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 			if nil != e {
 				return nil, false, farmer.NewFarmerError(e)
 			} else if !a3 {
-				http.Error(w, "错误的参数", 400)
+				http.Error(w, "错误的参数, regexp, "+value["regexp"].(string)+", "+value["name"].(string), 400)
 				return nil, false, nil
 			}
 		}
@@ -53,7 +53,7 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				if nil != e {
 					return nil, false, farmer.NewFarmerError(e)
 				} else if a3 < float64(a4) {
-					http.Error(w, "错误的参数, "+value["name"].(string), 400)
+					http.Error(w, "错误的参数, max, "+value["name"].(string), 400)
 					return nil, false, nil
 				}
 			} else {
@@ -62,7 +62,7 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				if nil != e {
 					return nil, false, farmer.NewFarmerError(e)
 				} else if a3 < a4 {
-					http.Error(w, "错误的参数, "+value["name"].(string), 400)
+					http.Error(w, "错误的参数, max, "+value["name"].(string), 400)
 					return nil, false, nil
 				}
 			}
@@ -78,7 +78,7 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				if nil != e {
 					return nil, false, farmer.NewFarmerError(e)
 				} else if float64(a4) < a3 {
-					http.Error(w, "错误的参数, "+value["name"].(string), 400)
+					http.Error(w, "错误的参数, min, "+value["name"].(string), 400)
 					return nil, false, nil
 				}
 			} else {
@@ -87,13 +87,13 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				if nil != e {
 					return nil, false, farmer.NewFarmerError(e)
 				} else if a4 < a3 {
-					http.Error(w, "错误的参数, "+value["name"].(string), 400)
+					http.Error(w, "错误的参数, min, "+value["name"].(string), 400)
 					return nil, false, nil
 				}
 			}
 		}
 		if a2, ok := value["not"]; ok && value1 == a2.(string) {
-			http.Error(w, "错误的参数, "+value["name"].(string), 400)
+			http.Error(w, "错误的参数, not, "+value["name"].(string), 400)
 			return nil, false, nil
 		}
 
