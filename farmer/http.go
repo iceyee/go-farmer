@@ -1,6 +1,7 @@
 package farmer
 
 import (
+	"strconv"
 	// TODO
 	//
 	"bytes"
@@ -99,7 +100,7 @@ func (h *Http) Request() bool {
 	// body1 - POST内容(bytes.Reader)
 	// request1 - 请求(*http.Request)
 	var body1 io.Reader
-	if "POST" == h.method && nil != h.body {
+	if nil != h.body {
 		body1 = bytes.NewReader(h.body)
 	}
 	request1, e := http.NewRequest(h.method, h.url, body1)
@@ -135,6 +136,12 @@ func (h *Http) Request() bool {
 		ip2 := net.IPv4(a[4], a[5], a[6], a[7]).String()
 		ip3 := fmt.Sprintf("%s, %s", ip1, ip2)
 		request1.Header.Set("X-Forwarded-For", ip3)
+	}
+	if nil != h.body {
+		request1.Header.Set("Content-Length", strconv.FormatInt(int64(len(h.body)), 10))
+		if _, exists := request1.Header["Content-Type"]; !exists {
+            request1.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+		}
 	}
 	if h.verbose {
 		println(">>>\n", h.method, h.url)
