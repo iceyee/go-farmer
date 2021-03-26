@@ -302,17 +302,16 @@ func (c *ControllerRegistry) process(w http.ResponseWriter, r *http.Request) boo
 			return false
 		}
 		fmt.Printf("%v\n", r.Form)
-		arg, ok, e := c.validate(w, r, apiDocument)
+		arg, e := c.validate(w, r, apiDocument)
 		if nil != e {
 			http.Error(w, e.Error(), 400)
-			println(e.Error())
-		} else if !ok {
-		} else {
-			apiDocument.processor.Call([]reflect.Value{
-				reflect.ValueOf(w),
-				reflect.ValueOf(r),
-				reflect.ValueOf(arg)})
+            // println(e.Error())
+			return false
 		}
+		apiDocument.processor.Call([]reflect.Value{
+			reflect.ValueOf(w),
+			reflect.ValueOf(r),
+			reflect.ValueOf(arg)})
 		return false
 	} else {
 		// 匹配不成功

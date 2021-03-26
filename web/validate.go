@@ -3,6 +3,7 @@ package web
 import (
 	"github.com/iceyee/go-farmer/farmer"
 	"net/http"
+	"net/url"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -12,7 +13,7 @@ import (
 
 // 验证表单并生成参数. 因为要配合ControllerRegistry用, 所以是不公开的.
 func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
-	api ApiDocument) (interface{}, bool, error) {
+	api ApiDocument) (interface{}, error) {
 	// result1 - 输出结果, struct (reflect.Value)
 	// value1 - url参数的值(string)
 	// key - 属性名(string)
@@ -23,24 +24,35 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 	result1 := reflect.New(api.ArgumentType).Elem()
 	for key, value := range api.a1 {
 		var value1 = r.FormValue(value["name"].(string))
+		var builder1 = farmer.NewStringBuilder()
 		if "" == value1 {
 			if _, ok := value["require"]; ok {
-				http.Error(w, "错误的参数, require, "+value["name"].(string), 400)
-				return nil, false, nil
-			} else if _, ok := value["default"]; !ok {
-				continue
+				builder1.Append("\n错误的参数, require, ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			} else {
 				value1 = value["default"].(string)
 			}
 		}
+		value1, e := url.QueryUnescape(value1)
+		if nil != e {
+			return nil, farmer.NewFarmerError(e)
+		}
 		if a2 := value["regexp"].(string); "" != a2 {
 			a3, e := regexp.MatchString(a2, value1)
 			if nil != e {
-				return nil, false, farmer.NewFarmerError(e)
+				builder1.Append(e.Error())
+				builder1.Append("\n错误的参数, regexp, ")
+				builder1.Append(value["regexp"].(string))
+				builder1.Append(", ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			} else if !a3 {
-				http.Error(w, "错误的参数, regexp, "+value["regexp"].(string)+", "+value1+
-					", "+value["name"].(string), 400)
-				return nil, false, nil
+				builder1.Append("\n错误的参数, regexp, ")
+				builder1.Append(value["regexp"].(string))
+				builder1.Append(", ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			}
 		}
 		if a2, ok := value["max"]; ok {
@@ -52,19 +64,27 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				a3 := a2.(float64)
 				a4, e := strconv.ParseInt(value1, 16, 64)
 				if nil != e {
-					return nil, false, farmer.NewFarmerError(e)
+					builder1.Append(e.Error())
+					builder1.Append("\n错误的参数, max, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				} else if a3 < float64(a4) {
-					http.Error(w, "错误的参数, max, "+value["name"].(string), 400)
-					return nil, false, nil
+					builder1.Append("\n错误的参数, max, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				}
 			} else {
 				a3 := a2.(float64)
 				a4, e := strconv.ParseFloat(value1, 64)
 				if nil != e {
-					return nil, false, farmer.NewFarmerError(e)
+					builder1.Append(e.Error())
+					builder1.Append("\n错误的参数, max, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				} else if a3 < a4 {
-					http.Error(w, "错误的参数, max, "+value["name"].(string), 400)
-					return nil, false, nil
+					builder1.Append("\n错误的参数, max, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				}
 			}
 		}
@@ -77,25 +97,36 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 				a3 := a2.(float64)
 				a4, e := strconv.ParseInt(value1, 16, 64)
 				if nil != e {
-					return nil, false, farmer.NewFarmerError(e)
+					builder1.Append(e.Error())
+					builder1.Append("\n错误的参数, min, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				} else if float64(a4) < a3 {
-					http.Error(w, "错误的参数, min, "+value["name"].(string), 400)
-					return nil, false, nil
+					builder1.Append("\n错误的参数, min, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				}
 			} else {
 				a3 := a2.(float64)
 				a4, e := strconv.ParseFloat(value1, 64)
 				if nil != e {
-					return nil, false, farmer.NewFarmerError(e)
+					builder1.Append(e.Error())
+					builder1.Append("\n错误的参数, min, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				} else if a4 < a3 {
-					http.Error(w, "错误的参数, min, "+value["name"].(string), 400)
-					return nil, false, nil
+					builder1.Append("\n错误的参数, min, ")
+					builder1.Append(value["name"].(string))
+					return nil, farmer.NewFarmerError(builder1.String())
 				}
 			}
 		}
 		if a2, ok := value["not"]; ok && value1 == a2.(string) {
-			http.Error(w, "错误的参数, not, "+value["name"].(string), 400)
-			return nil, false, nil
+			builder1.Append("\n错误的参数, not, ")
+			builder1.Append(a2.(string))
+			builder1.Append(", ")
+			builder1.Append(value["name"].(string))
+			return nil, farmer.NewFarmerError(builder1.String())
 		}
 
 		// 赋值
@@ -104,7 +135,9 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 		// a2 - (StructField)
 		a2, ok := api.ArgumentType.FieldByName(key)
 		if !ok {
-			return nil, false, nil
+			builder1.Append("\n错误的参数, ")
+			builder1.Append(value["name"].(string))
+			return nil, farmer.NewFarmerError(builder1.String())
 		}
 		type1 := a2.Type
 		type2 := a2.Type.String()
@@ -112,32 +145,44 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 			// 十六进制
 			a4, e := strconv.ParseInt(value1, 16, 64)
 			if nil != e {
-				return nil, false, farmer.NewFarmerError(e)
+				builder1.Append(e.Error())
+				builder1.Append("\n错误的参数, ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			}
 			result1.FieldByName(key).Set(reflect.ValueOf(a4).Convert(type1))
 		} else if a3, _ := regexp.MatchString(`int|byte|rune`, type2); a3 {
 			// 整数
 			a4, e := strconv.ParseInt(value1, 10, 64)
 			if nil != e {
-				return nil, false, farmer.NewFarmerError(e)
+				builder1.Append(e.Error())
+				builder1.Append("\n错误的参数, ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			}
 			result1.FieldByName(key).Set(reflect.ValueOf(a4).Convert(type1))
 		} else if strings.Contains(type2, "float") {
 			// 小数
 			a4, e := strconv.ParseFloat(value1, 64)
 			if nil != e {
-				return nil, false, farmer.NewFarmerError(e)
+				builder1.Append(e.Error())
+				builder1.Append("\n错误的参数, ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			}
 			result1.FieldByName(key).Set(reflect.ValueOf(a4).Convert(type1))
 		} else if a3, _ := regexp.MatchString(`^true$|^false$`, value1); a3 {
 			a4, e := strconv.ParseBool(value1)
 			if nil != e {
-				return nil, false, farmer.NewFarmerError(e)
+				builder1.Append(e.Error())
+				builder1.Append("\n错误的参数, ")
+				builder1.Append(value["name"].(string))
+				return nil, farmer.NewFarmerError(builder1.String())
 			}
 			result1.FieldByName(key).Set(reflect.ValueOf(a4).Convert(type1))
 		} else {
 			result1.FieldByName(key).Set(reflect.ValueOf(value1))
 		}
 	}
-	return result1.Interface(), true, nil
+	return result1.Interface(), nil
 }
