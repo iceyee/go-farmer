@@ -146,7 +146,7 @@ func (*FileController) Third(w http.ResponseWriter, r *http.Request, arg interfa
 	return
 }
 
-func Test2(t *testing.T) {
+func test2(t *testing.T) {
 	ControllerRegistryA.Registry(new(FileController))
     // Listen(":12000")
 	var server = httptest.NewServer(new(Server))

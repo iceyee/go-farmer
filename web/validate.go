@@ -22,7 +22,14 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 	// a4 - 临时变量
 	result1 := reflect.New(api.ArgumentType).Elem()
 	for key, value := range api.a1 {
-		value1 := r.FormValue(value["name"].(string))
+		var value1 string
+		if "POST" == r.Method ||
+			"PUT" == r.Method ||
+			"PATCH" == r.Method {
+			value1 = r.PostFormValue(value["name"].(string))
+		} else {
+			value1 = r.FormValue(value["name"].(string))
+		}
 		if "" == value1 {
 			if _, ok := value["require"]; ok {
 				http.Error(w, "错误的参数, require, "+value["name"].(string), 400)
