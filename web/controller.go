@@ -132,6 +132,9 @@ func (c *ControllerRegistry) Registry(controller Controller) {
 				"\n  实际 " + method1.Type.String())
 		}
 		api[x].processor = value1.MethodByName(api[x].MapTo)
+		if nil == api[x].ArgumentType {
+			panic(name1 + ", ArgumentType未定义")
+		}
 
 		// field1 - api.ArgumentType.属性(reflect.StructField)
 		// tag1 - api.ArgumentType.属性.标签.web (string)
