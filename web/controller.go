@@ -1,6 +1,7 @@
 package web
 
 import (
+	"fmt"
 	"net/http"
 	"reflect"
 	"regexp"
@@ -300,6 +301,7 @@ func (c *ControllerRegistry) process(w http.ResponseWriter, r *http.Request) boo
 			http.Error(w, "禁止的请求方法", 405)
 			return false
 		}
+		fmt.Printf("%v\n", r.Form)
 		arg, ok, e := c.validate(w, r, apiDocument)
 		if nil != e {
 			http.Error(w, e.Error(), 400)

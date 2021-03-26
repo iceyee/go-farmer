@@ -38,7 +38,8 @@ func (c *ControllerRegistry) validate(w http.ResponseWriter, r *http.Request,
 			if nil != e {
 				return nil, false, farmer.NewFarmerError(e)
 			} else if !a3 {
-				http.Error(w, "错误的参数, regexp, "+value["regexp"].(string)+", "+value["name"].(string), 400)
+				http.Error(w, "错误的参数, regexp, "+value["regexp"].(string)+", "+value1+
+					", "+value["name"].(string), 400)
 				return nil, false, nil
 			}
 		}
