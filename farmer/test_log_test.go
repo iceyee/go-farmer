@@ -1,10 +1,9 @@
 package farmer
 
 import (
-	// TODO
-	//
 	"os"
 	"testing"
+	//
 )
 
 func TestLog(t *testing.T) {

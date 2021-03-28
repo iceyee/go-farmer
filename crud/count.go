@@ -3,7 +3,7 @@ package crud
 import (
 	"database/sql"
 	"fmt"
-	"github.com/iceyee/go-farmer/farmer"
+	"github.com/iceyee/go-farmer/v1/farmer"
 	//
 )
 

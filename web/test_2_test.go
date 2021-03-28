@@ -1,7 +1,7 @@
 package web
 
 import (
-	"github.com/iceyee/go-farmer/farmer"
+	"github.com/iceyee/go-farmer/v1/farmer"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -148,7 +148,7 @@ func (*FileController) Third(w http.ResponseWriter, r *http.Request, arg interfa
 
 func test2(t *testing.T) {
 	ControllerRegistryA.Registry(new(FileController))
-    // Listen(":12000")
+	// Listen(":12000")
 	var server = httptest.NewServer(new(Server))
 	defer server.Close()
 

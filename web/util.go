@@ -2,7 +2,7 @@ package web
 
 import (
 	"encoding/json"
-	"github.com/iceyee/go-farmer/farmer"
+	"github.com/iceyee/go-farmer/v1/farmer"
 	"net/http"
 	//
 )

@@ -2,8 +2,6 @@ package farmer
 
 import (
 	"strconv"
-	// TODO
-	//
 	"bytes"
 	"compress/gzip"
 	"fmt"
@@ -15,6 +13,7 @@ import (
 	"net/url"
 	"strings"
 	"time"
+	//
 )
 
 type Http struct {

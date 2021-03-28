@@ -1,11 +1,10 @@
 package farmer
 
 import (
-	// TODO
-	//
 	"bytes"
 	"fmt"
 	"strconv"
+	//
 )
 
 type StringBuilder struct {

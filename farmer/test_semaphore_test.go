@@ -1,9 +1,8 @@
 package farmer
 
 import (
-	// TODO
-	//
 	"testing"
+	//
 )
 
 func TestSemaphore(t *testing.T) {

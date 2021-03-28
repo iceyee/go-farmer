@@ -1,6 +1,0 @@
-package farmer
-
-import (
-// TODO
-//
-)
