@@ -1,4 +1,4 @@
-module github.com/iceyee/go-farmer/v1
+module github.com/iceyee/go-farmer/v2
 
 go 1.14
 

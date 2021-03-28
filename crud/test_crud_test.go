@@ -3,7 +3,7 @@ package crud
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/iceyee/go-farmer/v1/farmer"
+	"github.com/iceyee/go-farmer/v2/farmer"
 	"math/rand"
 	"testing"
 	"time"

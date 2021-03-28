@@ -2,7 +2,7 @@ package web
 
 import (
 	"encoding/base64"
-	"github.com/iceyee/go-farmer/v1/farmer"
+	"github.com/iceyee/go-farmer/v2/farmer"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
