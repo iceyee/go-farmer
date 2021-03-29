@@ -1,7 +1,6 @@
 package farmer
 
 import (
-	"strconv"
 	"bytes"
 	"compress/gzip"
 	"fmt"
@@ -11,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 	//
@@ -139,7 +139,7 @@ func (h *Http) Request() bool {
 	if nil != h.body {
 		request1.Header.Set("Content-Length", strconv.FormatInt(int64(len(h.body)), 10))
 		if _, exists := request1.Header["Content-Type"]; !exists {
-            request1.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+			request1.Header.Set("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
 		}
 	}
 	if h.verbose {
