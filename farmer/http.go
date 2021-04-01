@@ -120,7 +120,7 @@ func (h *Http) Request() bool {
 		request1.Header.Set("Accept-Language", "zh, zh-CN")
 	}
 	if _, exists := request1.Header["User-Agent"]; !exists {
-		request1.Header.Set("User-Agent", "farmer")
+		request1.Header.Set("User-Agent", "iceyee/2.0")
 	}
 	if _, exists := request1.Header["X-Requested-With"]; !exists {
 		request1.Header.Set("X-Requested-With", "XMLHttpRequest")
