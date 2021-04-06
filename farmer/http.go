@@ -22,6 +22,7 @@ type Http struct {
 	header  map[string]string // 请求头
 	method  string            // 请求方法
 	proxy   string            // 代理
+	timeout time.Duration     // 超时, 默认60秒
 	url     string            // 链接
 	verbose bool              // 冗余模式
 
@@ -39,6 +40,7 @@ func NewHttp() *Http {
 	h := new(Http)
 	h.method = "GET"
 	h.verbose = false
+	h.timeout = 60 * time.Second
 	return h
 }
 
@@ -54,6 +56,11 @@ func (h *Http) SetHeader(header map[string]string) {
 
 func (h *Http) SetMethod(method string) {
 	h.method = method
+	return
+}
+
+func (h *Http) SetTimeout(timeout time.Duration) {
+	h.timeout = timeout
 	return
 }
 
@@ -159,7 +166,7 @@ func (h *Http) Request() bool {
 	// transport1 - (*http.Transport)
 	// response1 - (*http.Response)
 	client1 := new(http.Client)
-	client1.Timeout = 60 * time.Second
+	client1.Timeout = h.timeout
 	if "" != h.proxy {
 		transport1 := new(http.Transport)
 		transport1.Proxy = func(*http.Request) (*url.URL, error) {
