@@ -1,0 +1,38 @@
+package futil
+
+import (
+	"github.com/iceyee/go-farmer/v3/fassert"
+	"log"
+	"time"
+	//
+)
+
+func ExampleDeleteExpiredKey() {
+	var a001 map[string]int64
+	a001 = make(map[string]int64, 0xff)
+	a001["a"] = 0
+	a001["b"] = time.Now().Unix() - 10
+	a001["c"] = time.Now().Unix() - 5
+	a001["d"] = time.Now().Unix()
+	log.Println(a001)
+	fassert.Assert(4 == len(a001), "map初始元素是4个")
+	DeleteExpiredKey(a001, time.Now().Unix()-6)
+	log.Println(a001)
+	fassert.Assert(2 == len(a001), "删除6秒前的键, 还剩两个")
+	return
+}
+
+func ExampleDeleteExpiredKey2() {
+	var a001 map[string]T737
+	a001 = make(map[string]T737, 0xff)
+	a001["a"] = T737{Time: 0}
+	a001["b"] = T737{Time: time.Now().Unix() - 10}
+	a001["c"] = T737{Time: time.Now().Unix() - 5}
+	a001["d"] = T737{Time: time.Now().Unix()}
+	log.Println(a001)
+	fassert.Assert(4 == len(a001), "map初始元素是4个")
+	DeleteExpiredKey2(a001, time.Now().Unix()-6)
+	log.Println(a001)
+	fassert.Assert(2 == len(a001), "删除6秒前的键, 还剩两个")
+	return
+}
