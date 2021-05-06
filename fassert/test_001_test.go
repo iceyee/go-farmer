@@ -1,6 +1,7 @@
 package fassert
 
 import (
+	"errors"
 	"testing"
 	//
 )
@@ -12,10 +13,24 @@ func TestAssert(t *testing.T) {
 	func() {
 		defer func() {
 			if nil == recover() {
-				t.Fatal("Assert(false) 有问题")
+				t.Fatal("Assert() 有问题")
 			}
 		}()
 		Assert(false, "用 Assert() 测试false")
+	}()
+	return
+}
+
+func TestCheckError(t *testing.T) {
+	func() {
+		defer func() {
+			if e := recover(); nil == e {
+				t.Fatal("CheckError() 有问题")
+			} else {
+				t.Log(e)
+			}
+		}()
+		CheckError(errors.New("hello world."))
 	}()
 	return
 }
