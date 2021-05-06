@@ -1,23 +1,43 @@
 # Binaries for programs and plugins
 *.exe
 *.exe~
-*.dll
-*.so
 *.dylib
-*.a
-
-# Test binary, built with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+bin/*
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+*.tar
+*.apk
+*.ios
+
+# nohup
+nohup.*
+
+# Uml
+uml/*
+!uml/*.mdj
 
 # Vim
 *.swp
 
-# uml
-!*.mdj
-uml/*/
+# Log file
+*.log
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+# Go
+*.test
+
+# Java
+*.class
+
+# C or C++
+*.o
+*.a
+*.so
+*.dll
