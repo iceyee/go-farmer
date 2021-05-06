@@ -36,3 +36,8 @@ func TestDeleteExpiredKey2(t *testing.T) {
 	fassert.Assert(2 == len(a001), "删除6秒前的键, 还剩两个")
 	return
 }
+
+func TestSleep(t *testing.T) {
+	Sleep(1000)
+	return
+}
