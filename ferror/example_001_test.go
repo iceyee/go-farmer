@@ -4,7 +4,7 @@ import (
 //
 )
 
-func ExampleNew() {
+func ExampleFarmerError() {
 	println(New("hello world.").Error())
 	return
 }
