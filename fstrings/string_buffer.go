@@ -20,7 +20,7 @@ func NewStringBuffer() *StringBuffer {
 	return s
 }
 
-// 支持所有基础类型
+// 支持所有基础类型, []byte
 func (s *StringBuffer) Append(a interface{}) {
 	var a001 string
 	switch a.(type) {
@@ -54,6 +54,8 @@ func (s *StringBuffer) Append(a interface{}) {
 		a001 = strconv.FormatFloat(a.(float64), 'f', -1, 64)
 	case float32:
 		a001 = strconv.FormatFloat(float64(a.(float32)), 'f', -1, 32)
+	case []byte:
+		a001 = string(a.([]byte))
 	default:
 		a001 = ""
 	}
