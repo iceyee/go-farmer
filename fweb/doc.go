@@ -79,7 +79,7 @@
     }
 
     func (*B) Test(
-        session *Session,
+        session *fweb.Session,
         w http.ResponseWriter,
         r *http.Request,
         A int64,

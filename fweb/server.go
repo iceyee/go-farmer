@@ -26,7 +26,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		session = getSession("")
 	}
-	w.Header().Add("Set-Cookie", "session_id="+session.id)
+	w.Header().Add("Set-Cookie", "session_id="+session.id+"; Path=/")
 	for _, interceptor := range x494 {
 		if interceptor.Filter(r.URL.Path) {
 			if !interceptor.Process(session, w, r) {
