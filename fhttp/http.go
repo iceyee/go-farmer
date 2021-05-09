@@ -248,7 +248,6 @@ func (h *Http) Request() bool {
 		}
 	}
 	sb001.Append("\n\n")
-	sb001.Append(" ")
 	sb001.Append(string(data))
 	h.statusCode = response001.StatusCode
 	h.responseHeader = response001.Header
