@@ -187,7 +187,11 @@ func RegistryController(controller Controller) {
 		}
 		var a009 string = `^func\([^,]+,\*fweb.Session,http.ResponseWriter,\*http.Request`
 		for _, value := range b001.Parameters {
-			if "" == value.Default && !value.Required {
+			if "string" != value.Type &&
+				"" == value.Default &&
+				!value.Required {
+
+				println("非string类型, 必须require和default二选一.")
 				panic("定义错误.\n" + type001.String() + "\n" + method.Name)
 			}
 			if "float64" == value.Type {
