@@ -55,7 +55,7 @@ type Session struct {
 }
 
 // 取得会话信息, 如果不存在则创建.
-func getSession(sessionId string) *Session {
+func getSession(sessionId string) (*Session, bool) {
 	var s *Session
 	s = new(Session)
 	if a001, ok := context[sessionId]; ok {
@@ -63,6 +63,7 @@ func getSession(sessionId string) *Session {
 		s.storage = a001.Context
 		a001.Time = time515
 		context[s.id] = a001
+		return s, true
 	} else {
 		var a002 [16]byte
 		for x := 0; x < 16; x++ {
@@ -74,8 +75,8 @@ func getSession(sessionId string) *Session {
 			Context: s.storage,
 			Time:    time515,
 		}
+		return s, false
 	}
-	return s
 }
 
 func (s *Session) Get(key string) string {

@@ -22,11 +22,15 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	var session *Session
 	if cookie, e := r.Cookie("session_id"); nil != cookie && nil == e {
-		session = getSession(cookie.Value)
+		var ok bool
+		session, ok = getSession(cookie.Value)
+		if !ok {
+			w.Header().Add("Set-Cookie", "session_id="+session.id+"; Path=/")
+		}
 	} else {
-		session = getSession("")
+		session, _ = getSession("")
+		w.Header().Add("Set-Cookie", "session_id="+session.id+"; Path=/")
 	}
-	w.Header().Add("Set-Cookie", "session_id="+session.id+"; Path=/")
 	for _, interceptor := range x494 {
 		if interceptor.Filter(r.URL.Path) {
 			if !interceptor.Process(session, w, r) {
