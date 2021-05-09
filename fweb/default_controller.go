@@ -132,6 +132,10 @@ func (*defaultController) Api(session *Session, w http.ResponseWriter, r *http.R
 					a004 += ", 不能是"
 					a004 += x.Not
 				}
+				if "" != x.Description {
+					a004 += ", "
+					a004 += x.Description
+				}
 				a004 += "<br>"
 			}
 			a003 = strings.Replace(a003, "$$Parameters", a004, -1)
