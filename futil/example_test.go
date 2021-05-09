@@ -43,6 +43,14 @@ func TestSleep(t *testing.T) {
 	return
 }
 
+func TestNowTime(t *testing.T) {
+	a := NowTime
+	time.Sleep(1 * time.Second)
+	b := NowTime
+	fassert.Assert(a < b, "a < b")
+	return
+}
+
 func ExampleDeleteExpiredKey() {
 	var a001 map[string]int64
 	a001 = make(map[string]int64, 0xff)
