@@ -2,6 +2,7 @@ package futil
 
 import (
 	"github.com/iceyee/go-farmer/v3/fassert"
+	"log"
 	"testing"
 	"time"
 	//

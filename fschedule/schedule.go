@@ -2,7 +2,6 @@ package fschedule
 
 import (
 	"fmt"
-	"github.com/iceyee/go-farmer/v3/futil"
 	"regexp"
 	"strconv"
 	"strings"
@@ -135,7 +134,7 @@ func Schedule(
 			}
 			return false
 		}
-		futil.Sleep(delay)
+		time.Sleep(time.Duration(delay) * time.Millisecond)
 		for true {
 			var time001 time.Time
 			time001 = time.Now()
@@ -148,7 +147,9 @@ func Schedule(
 				go f()
 			}
 			// 下一分钟
-			futil.Sleep((61 - int64(time001.Second())) * 1000)
+			time.Sleep(
+				time.Duration(
+					61-int64(time001.Second())) * time.Second)
 		}
 	}()
 	return

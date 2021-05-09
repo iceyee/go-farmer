@@ -130,7 +130,7 @@ func testRegistryController(t *testing.T) {
 	return
 }
 
-func Test(t *testing.T) {
+func test(t *testing.T) {
 	RegistryInterceptor(new(A))
 	RegistryController(new(B))
 	RegistryFileServer("/", "/tmp/")
