@@ -2,6 +2,7 @@ package fweb
 
 import (
 	"net/http"
+	"net/url"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -247,6 +248,7 @@ func processController(
 	for _, x := range controller.Parameters {
 		var a001 string
 		a001 = r.FormValue(x.Name)
+		a001, _ = url.QueryUnescape(a001)
 		if x.Required && "" == a001 {
 			http.Error(w, "参数错误.", 400)
 			return
