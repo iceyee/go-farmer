@@ -3,6 +3,7 @@ package fweb
 import (
 	"encoding/json"
 	"github.com/iceyee/go-farmer/v3/ferror"
+	"github.com/iceyee/go-farmer/v3/flog"
 	"github.com/iceyee/go-farmer/v3/ftype"
 	"net/http"
 	//
@@ -24,5 +25,6 @@ func WriteJson(w http.ResponseWriter, data interface{}) ftype.Error {
 
 // 启动服务器
 func Listen(addressAndPort string) error {
+	flog.Debug("监听 " + addressAndPort)
 	return http.ListenAndServe(addressAndPort, new(Server))
 }
