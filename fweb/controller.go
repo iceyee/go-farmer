@@ -156,13 +156,6 @@ func RegistryController(controller Controller) {
 				b001.Response = strings.Replace(b001.Response, "&", "&amp;", -1)
 				b001.Response = strings.Replace(b001.Response, "<", "&lt;", -1)
 				b001.Response = strings.Replace(b001.Response, ">", "&gt;", -1)
-			} else if strings.HasPrefix(y, "@SortKey ") {
-				var a005 []string = strings.Split(y, " ")
-				if len(a005) < 2 {
-					panic("定义错误.\n" + type001.String() + "\n" + method.Name + "\n" + y)
-				}
-				b001.SortKey =
-					strings.Trim(strings.Join(a005[1:], " "), " \t\r\n")
 			} else if strings.HasPrefix(y, "@Url ") {
 				var a005 []string = strings.Split(y, " ")
 				if len(a005) < 2 {
@@ -217,13 +210,11 @@ func RegistryController(controller Controller) {
 			println(a001)
 			panic("定义错误.\n" + type001.String() + "\n" + method.Name)
 		}
-		if "" == b001.SortKey {
-			b001.SortKey = b001.Url
-		}
 		if "" == b001.Url {
 			println("未定义Url.")
 			panic("定义错误.\n" + type001.String() + "\n" + method.Name)
 		}
+		b001.SortKey = type001.String() + method.Name
 		x251[b001.Url] = b001
 	}
 	return

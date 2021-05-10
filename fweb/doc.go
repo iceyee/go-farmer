@@ -6,8 +6,6 @@
 
    @MapTo
 
-   @SortKey
-
    @Method [GET,POST等等]
 
    @Description
