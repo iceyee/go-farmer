@@ -187,7 +187,7 @@ func structToString(b *bytes.Buffer, v reflect.Value) {
 		bufferAppend(b, "[Anonymous] - {")
 	} else {
 		bufferAppend(b, name)
-		bufferAppend(b, "- {")
+		bufferAppend(b, " - {")
 	}
 	var t reflect.Type
 	t = v.Type()
