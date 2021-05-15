@@ -120,7 +120,7 @@ func Schedule(
 		b002 = f001(0, 23, a001[1])
 		b003 = f001(1, 31, a001[2])
 		b004 = f001(1, 12, a001[3])
-		b005 = f001(1, 7, a001[4])
+		b005 = f001(0, 6, a001[4])
 		// fmt.Printf("%v\n", b001)
 		// fmt.Printf("%v\n", b002)
 		// fmt.Printf("%v\n", b003)
@@ -146,6 +146,11 @@ func Schedule(
 				// 满足条件, 开始执行任务
 				go f()
 			}
+			// println(time001.Minute())
+			// println(time001.Hour())
+			// println(time001.Day())
+			// println(time001.Month())
+			// println(time001.Weekday())
 			// 下一分钟
 			time.Sleep(
 				time.Duration(
