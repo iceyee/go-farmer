@@ -1,8 +1,8 @@
 package ftimer
 
 import (
-	"github.com/iceyee/go-farmer/v3/fassert"
-	"github.com/iceyee/go-farmer/v3/futil"
+	"github.com/iceyee/go-farmer/v4/fassert"
+	"github.com/iceyee/go-farmer/v4/futil"
 	"testing"
 	//
 )

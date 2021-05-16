@@ -1,7 +1,7 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v3/ffile"
+	"github.com/iceyee/go-farmer/v4/ffile"
 	"io"
 	"os"
 	//
@@ -115,9 +115,9 @@ func SetProjectName(name string, flag LogFlag) {
 		if nil != e {
 			panic(e)
 		}
-		errorWriter = io.MultiWriter(os.Stdout, errorFile)
+		errorWriter = io.MultiWriter(os.Stderr, errorFile)
 	} else {
-		errorWriter = os.Stdout
+		errorWriter = os.Stderr
 	}
 	if F_FATAL == F_FATAL&flag {
 		a001 = ffile.Path(
@@ -134,9 +134,9 @@ func SetProjectName(name string, flag LogFlag) {
 		if nil != e {
 			panic(e)
 		}
-		fatalWriter = io.MultiWriter(os.Stdout, fatalFile)
+		fatalWriter = io.MultiWriter(os.Stderr, fatalFile)
 	} else {
-		fatalWriter = os.Stdout
+		fatalWriter = os.Stderr
 	}
 	projectName = name
 	logFlag = flag

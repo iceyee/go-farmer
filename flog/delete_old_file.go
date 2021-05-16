@@ -1,8 +1,8 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v3/ffile"
-	"github.com/iceyee/go-farmer/v3/fschedule"
+	"github.com/iceyee/go-farmer/v4/ffile"
+	"github.com/iceyee/go-farmer/v4/fschedule"
 	"os"
 	"time"
 	//
@@ -18,7 +18,7 @@ func init() {
 	return
 }
 
-// 删除7天前的文件
+// 删除7-8天前的文件.
 func deleteOldFile() {
 	if "" == projectName {
 		return
@@ -41,7 +41,7 @@ func deleteOldFile() {
 	if nil != e {
 		panic(e)
 	} else if !state001.IsDir() {
-		panic("Expected direcotry")
+		panic(a001 + "不是目录.")
 	}
 	var files []os.FileInfo
 	files, e = directory001.Readdir(0)

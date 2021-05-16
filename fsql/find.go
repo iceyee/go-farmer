@@ -2,9 +2,9 @@ package fsql
 
 import (
 	"database/sql"
-	"github.com/iceyee/go-farmer/v3/ferror"
-	"github.com/iceyee/go-farmer/v3/flog"
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ferror"
+	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"reflect"
 	//
 )

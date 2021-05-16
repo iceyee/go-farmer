@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/iceyee/go-farmer/v3/ferror"
-	"github.com/iceyee/go-farmer/v3/flog"
-	"github.com/iceyee/go-farmer/v3/fstrings"
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ferror"
+	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v4/fstrings"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -61,6 +61,7 @@ func (h *Http) SetMethod(method string) {
 	return
 }
 
+// 设置超时, 单位:毫秒.
 func (h *Http) SetTimeout(timeout int64) {
 	if 0 < timeout {
 		h.timeout = timeout
@@ -68,12 +69,13 @@ func (h *Http) SetTimeout(timeout int64) {
 	return
 }
 
-// @proxy: "", 或完整的代理, 如"socks5://[user:password@]hk.farmer.ink:10002"
+// @proxy: "", 或完整的代理, 如"socks5://[user:password@]hk.farmer.ink:10002".
 func (h *Http) SetProxy(proxy string) {
 	h.proxy = proxy
 	return
 }
 
+// 设置访问链接, (必须).
 func (h *Http) SetUrl(url string) {
 	h.url = url
 	return
@@ -96,7 +98,7 @@ func (h *Http) GetResponseBody() []byte {
 }
 
 // 发起请求, 其中URL是必须填的, 如果返回false, 则表示发生异常, 可以调用.GetError()获取异常.
-// 只有返回true的时候, .GetStatusCode(), .GetResponseHeader(), .GetResponseBody() 才会有效
+// 只有返回true的时候, .GetStatusCode(), .GetResponseHeader(), .GetResponseBody() 才会有效.
 func (h *Http) Request() bool {
 	var sb001 *fstrings.StringBuffer
 	sb001 = fstrings.NewStringBuffer()
@@ -116,7 +118,7 @@ func (h *Http) Request() bool {
 	if "" == h.url ||
 		"POST" == h.method && nil == h.body {
 
-		h.e = ferror.New("参数不完整, 缺少url或body")
+		h.e = ferror.New("参数不完整, 缺少url或body.")
 		return false
 	}
 	var body001 io.Reader
@@ -149,7 +151,6 @@ func (h *Http) Request() bool {
 		request001.Header.Set("X-Requested-With", "XMLHttpRequest")
 	}
 	if _, ok := request001.Header["X-Forwarded-For"]; !ok {
-		// ip1, ip2, ip3 - IP, 临时变量
 		a := [8]byte{}
 		for index, _ := range a {
 			a[index] = byte(rand.Intn(0xff))

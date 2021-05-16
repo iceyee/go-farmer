@@ -2,7 +2,7 @@ package fhttp
 
 import (
 	"encoding/json"
-	"github.com/iceyee/go-farmer/v3/fassert"
+	"github.com/iceyee/go-farmer/v4/fassert"
 	"testing"
 	//
 )

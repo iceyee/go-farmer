@@ -3,8 +3,8 @@ package fsql
 import (
 	"context"
 	"database/sql"
-	"github.com/iceyee/go-farmer/v3/flog"
-	"github.com/iceyee/go-farmer/v3/fstrings"
+	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v4/fstrings"
 	"reflect"
 	"strings"
 	//

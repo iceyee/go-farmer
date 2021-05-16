@@ -113,7 +113,7 @@ func arrayToString(b *bytes.Buffer, v reflect.Value) {
 		bufferAppend(b, "nil")
 		return
 	}
-	bufferAppend(b, "[")
+	bufferAppend(b, "[Array] [")
 	var length int
 	length = v.Len()
 	for x := 0; x < length; x++ {
@@ -143,7 +143,7 @@ func mapToString(b *bytes.Buffer, v reflect.Value) {
 		bufferAppend(b, "nil")
 		return
 	}
-	bufferAppend(b, "{")
+	bufferAppend(b, "[Map] {")
 	var keys []reflect.Value
 	keys = v.MapKeys()
 	for _, key := range keys {
@@ -184,10 +184,10 @@ func stringToString(b *bytes.Buffer, v reflect.Value) {
 
 func structToString(b *bytes.Buffer, v reflect.Value) {
 	if name := v.Type().Name(); "" == name {
-		bufferAppend(b, "[Anonymous] - {")
+		bufferAppend(b, "[Anonymous] {")
 	} else {
 		bufferAppend(b, name)
-		bufferAppend(b, " - {")
+		bufferAppend(b, " {")
 	}
 	var t reflect.Type
 	t = v.Type()

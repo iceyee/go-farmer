@@ -1,7 +1,7 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v3/fschedule"
+	"github.com/iceyee/go-farmer/v4/fschedule"
 	"os"
 	//
 )

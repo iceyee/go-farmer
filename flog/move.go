@@ -2,8 +2,8 @@ package flog
 
 import (
 	"fmt"
-	"github.com/iceyee/go-farmer/v3/ffile"
-	"github.com/iceyee/go-farmer/v3/fschedule"
+	"github.com/iceyee/go-farmer/v4/ffile"
+	"github.com/iceyee/go-farmer/v4/fschedule"
 	"io"
 	"os"
 	"time"
@@ -20,7 +20,7 @@ func init() {
 	return
 }
 
-// 移动文件.
+// 文件带编号重命名.
 func move() {
 	if "" == projectName {
 		return
@@ -159,9 +159,9 @@ func move() {
 		if nil != e {
 			panic(e)
 		}
-		errorWriter = io.MultiWriter(os.Stdout, errorFile)
+		errorWriter = io.MultiWriter(os.Stderr, errorFile)
 	} else {
-		errorWriter = os.Stdout
+		errorWriter = os.Stderr
 	}
 	if F_FATAL == F_FATAL&logFlag {
 		a001 = ffile.Path(
@@ -187,9 +187,9 @@ func move() {
 		if nil != e {
 			panic(e)
 		}
-		fatalWriter = io.MultiWriter(os.Stdout, fatalFile)
+		fatalWriter = io.MultiWriter(os.Stderr, fatalFile)
 	} else {
-		fatalWriter = os.Stdout
+		fatalWriter = os.Stderr
 	}
 	return
 }

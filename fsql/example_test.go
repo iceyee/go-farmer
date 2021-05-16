@@ -4,7 +4,7 @@ package fsql
 // import (
 //     "database/sql"
 //     _ "github.com/go-sql-driver/mysql"
-//     "github.com/iceyee/go-farmer/v3/fassert"
+//     "github.com/iceyee/go-farmer/v4/fassert"
 //     "testing"
 //     //
 // )

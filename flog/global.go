@@ -6,7 +6,7 @@ import (
 	//
 )
 
-// 日志等级
+// 日志等级.
 type LogLevel int64
 
 const (
@@ -18,6 +18,16 @@ const (
 	NONE
 )
 
+const (
+	L_DEBUG LogLevel = iota
+	L_INFO
+	L_WARN
+	L_ERROR
+	L_FATAL
+	L_NONE
+)
+
+// 日志标志. 表示哪些日志需要记录.
 type LogFlag int64
 
 const (

@@ -1,32 +1,30 @@
 package fsmtp
 
 import (
-	"github.com/iceyee/go-farmer/v3/ferror"
-	"github.com/iceyee/go-farmer/v3/flog"
-	"github.com/iceyee/go-farmer/v3/fstrings"
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"fmt"
+	"github.com/iceyee/go-farmer/v4/ferror"
+	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v4/fstrings"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"net/smtp"
 	"strings"
 	//
 )
 
-// 发送邮件
+// 发送邮件. 支持群发.
 func SendMail(
 	server string,
 	account string,
 	password string,
-	to string,
 	subject string,
-	content string) ftype.Error {
+	content string,
+	to ...string) ftype.Error {
 
 	var sb001 *fstrings.StringBuffer
 	sb001 = fstrings.NewStringBuffer()
 	sb001.Append("Content-Type: text/html; charset=UTF-8; \r\n")
 	sb001.Append("From: <")
 	sb001.Append(account)
-	sb001.Append(">\r\n")
-	sb001.Append("To: <")
-	sb001.Append(to)
 	sb001.Append(">\r\n")
 	sb001.Append("Subject: ")
 	sb001.Append(subject)
@@ -40,7 +38,7 @@ func SendMail(
 	sb002.Append("\nserver: " + server)
 	sb002.Append("\naccount: " + account)
 	sb002.Append("\npassword: " + password)
-	sb002.Append("\nto: " + to)
+	sb002.Append("\nto: " + fmt.Sprintf("%v", to))
 	sb002.Append("\nsubject: " + subject)
 	sb002.Append("\ncontent: " + content)
 	sb002.Append("\n\n>>>>>>>>>>\n")
@@ -64,7 +62,7 @@ func SendMail(
 		server,
 		auth001,
 		account,
-		[]string{to},
+		to,
 		[]byte(sb001.String()))
 	if nil != e {
 		e = ferror.New(e)

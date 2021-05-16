@@ -9,7 +9,7 @@ type Semaphore struct {
 	channel chan byte
 }
 
-func New(max int) *Semaphore {
+func New(max int64) *Semaphore {
 	if max <= 0 {
 		max = 1
 	}
@@ -19,23 +19,20 @@ func New(max int) *Semaphore {
 	return s
 }
 
-func (s *Semaphore) Acquire() bool {
-	_, ok := <-s.channel
-	return ok
+func (s *Semaphore) Acquire() {
+	<-s.channel
+	return
 }
 
-func (s *Semaphore) AcquireN(n int) bool {
+func (s *Semaphore) AcquireN(n int) {
 	for x := 0; x < n; x++ {
-		_, ok := <-s.channel
-		if !ok {
-			return false
-		}
+		<-s.channel
 	}
-	return true
+	return
 }
 
-func (s *Semaphore) AvailablePermits() int {
-	return len(s.channel)
+func (s *Semaphore) AvailablePermits() int64 {
+	return int64(len(s.channel))
 }
 
 func (s *Semaphore) Release() {
@@ -43,8 +40,8 @@ func (s *Semaphore) Release() {
 	return
 }
 
-func (s *Semaphore) ReleaseN(n int) {
-	for x := 0; x < n; x++ {
+func (s *Semaphore) ReleaseN(n int64) {
+	for x := int64(0); x < n; x++ {
 		s.channel <- 0
 	}
 	return
@@ -54,19 +51,16 @@ func (s *Semaphore) TryAcquire() bool {
 	if 0 == len(s.channel) {
 		return false
 	}
-	_, ok := <-s.channel
-	return ok
+	<-s.channel
+	return true
 }
 
-func (s *Semaphore) TryAcquireN(n int) bool {
-	for x := 0; x < n; x++ {
-		if len(s.channel) < n-x {
+func (s *Semaphore) TryAcquireN(n int64) bool {
+	for x := int64(0); x < n; x++ {
+		if int64(len(s.channel)) < n-x {
 			return false
 		}
-		_, ok := <-s.channel
-		if !ok {
-			return false
-		}
+		<-s.channel
 	}
 	return true
 }

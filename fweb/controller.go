@@ -1,6 +1,7 @@
 package fweb
 
 import (
+	"github.com/iceyee/go-farmer/v4/flog"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -216,6 +217,7 @@ func RegistryController(controller Controller) {
 		}
 		b001.SortKey = type001.String() + method.Name
 		x251[b001.Url] = b001
+		flog.Debug("Controller, " + b001.Url)
 	}
 	return
 }

@@ -9,8 +9,8 @@ import (
 func Assert(condition bool, message ...string) {
 	var a001 string
 	for _, x := range message {
-		a001 += " "
 		a001 += x
+		a001 += " "
 	}
 	if condition {
 		println(a001 + " - 通过.")
@@ -26,8 +26,8 @@ func Assert(condition bool, message ...string) {
 func Assert2(condition bool, message ...string) {
 	var a001 string
 	for _, x := range message {
-		a001 += " "
 		a001 += x
+		a001 += " "
 	}
 	if condition {
 		println(a001 + " - 通过.")

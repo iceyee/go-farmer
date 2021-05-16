@@ -5,7 +5,7 @@ import (
 	//
 )
 
-// 计时器
+// 计时器. 计时单位: 毫秒.
 type Timer struct {
 	begin *int64
 }

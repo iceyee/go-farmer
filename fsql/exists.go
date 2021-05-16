@@ -1,7 +1,7 @@
 package fsql
 
 import (
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"reflect"
 	//
 )

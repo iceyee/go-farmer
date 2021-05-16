@@ -1,13 +1,13 @@
 package ffile
 
 import (
-	"github.com/iceyee/go-farmer/v3/ferror"
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ferror"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"io/ioutil"
 	//
 )
 
-// 读文件
+// 读文件.
 func ReadFile(filename string) ([]byte, ftype.Error) {
 	var content []byte
 	var e ftype.Error

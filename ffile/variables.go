@@ -6,11 +6,15 @@ import (
 	//
 )
 
-// 用户主目录
+// 用户主目录.
 var HomeDirectory string
 
-// 路径分隔符
+// 路径分隔符.
 var PathSeparator string = string(os.PathSeparator)
+
+// 多路径分隔符.
+// 如, linux下是':'.
+var PathListSeparator string = string(os.PathListSeparator)
 
 func init() {
 	var user001 *user.User

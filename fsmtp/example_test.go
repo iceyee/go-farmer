@@ -1,7 +1,7 @@
 package fsmtp
 
 import (
-	"github.com/iceyee/go-farmer/v3/fassert"
+	"github.com/iceyee/go-farmer/v4/fassert"
 	"testing"
 	//
 )
@@ -12,9 +12,10 @@ func TestSendMail(t *testing.T) {
 		QQ_MAIL_SERVER,
 		"iceyee.studio@qq.com",
 		"ddaulujsexzlbidd",
-		"farmer.person@qq.com",
 		"测试-标题",
 		"测试-内容.",
+		"farmer.person@qq.com",
+		"709565591@qq.com",
 	)
 	fassert.CheckError(e)
 	return
@@ -26,9 +27,10 @@ func ExampleSendMail() {
 		QQ_MAIL_SERVER,
 		"iceyee.studio@qq.com",
 		"ddaulujsexzlbidd",
-		"farmer.person@qq.com",
 		"测试-标题",
 		"测试-内容.",
+		"farmer.person@qq.com",
+		"709565591@qq.com",
 	)
 	fassert.CheckError(e)
 	return

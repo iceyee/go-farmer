@@ -1,7 +1,7 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v3/fhttp"
+	"github.com/iceyee/go-farmer/v4/fhttp"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -73,7 +73,7 @@ func (*B) Test(
 	return
 }
 
-func testRegistryController(t *testing.T) {
+func TestRegistryController(t *testing.T) {
 	RegistryInterceptor(new(A))
 	RegistryController(new(B))
 	RegistryFileServer("/", "/tmp/")

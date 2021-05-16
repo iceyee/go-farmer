@@ -1,7 +1,7 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"strings"
 	//
 )
@@ -35,7 +35,7 @@ func Debug(message interface{}) {
 	return
 }
 
-// message类型支持, string, error, ftype.Stringer, []byte
+// message类型支持, string, error, ftype.Stringer, []byte.
 func Info(message interface{}) {
 	if INFO < logLevel {
 		return

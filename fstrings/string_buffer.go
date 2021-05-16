@@ -2,7 +2,7 @@ package fstrings
 
 import (
 	"bytes"
-	"github.com/iceyee/go-farmer/v3/ftype"
+	"github.com/iceyee/go-farmer/v4/ftype"
 	"strconv"
 	//
 )
@@ -20,7 +20,7 @@ func NewStringBuffer() *StringBuffer {
 	return s
 }
 
-// 支持所有基础类型, []byte
+// 支持所有基础类型, ftype.Stringer, []byte.
 func (s *StringBuffer) Append(a interface{}) {
 	var a001 string
 	switch a.(type) {
