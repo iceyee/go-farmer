@@ -2,6 +2,7 @@ package fweb
 
 import (
 	"github.com/iceyee/go-farmer/v4/fhttp"
+	"github.com/iceyee/go-farmer/v4/flog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -74,6 +75,7 @@ func (*B) Test(
 }
 
 func TestRegistryController(t *testing.T) {
+	flog.SetLogLevel(flog.L_DEBUG)
 	RegistryInterceptor(new(A))
 	RegistryController(new(B))
 	RegistryFileServer("/", "/tmp/")
