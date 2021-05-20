@@ -253,7 +253,8 @@ func processController(
 			http.Error(w, "参数错误.", 400)
 			return
 		}
-		if "" != x.Regexp {
+		if "" != x.Regexp &&
+			(x.Required || "" != a001) {
 			if ok, e := regexp.MatchString(x.Regexp, a001); nil == e && !ok {
 				http.Error(w, "参数错误.", 400)
 				return
