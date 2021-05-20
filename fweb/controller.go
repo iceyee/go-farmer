@@ -229,7 +229,7 @@ func processController(
 	controller t184) {
 
 	if !strings.Contains(controller.Method, r.Method) {
-		http.Error(w, "请求方法不允许.", 403)
+		http.Error(w, "Method Not Allowed", 405)
 		return
 	}
 	var b001 []reflect.Value
@@ -243,20 +243,20 @@ func processController(
 		a001 = r.FormValue(x.Name)
 		a001, _ = url.QueryUnescape(a001)
 		if x.Required && "" == a001 {
-			http.Error(w, "参数错误.", 400)
+			http.Error(w, "Bad Request", 400)
 			return
 		}
 		if "" == a001 {
 			a001 = x.Default
 		}
 		if "" != x.Not && x.Not == a001 {
-			http.Error(w, "参数错误.", 400)
+			http.Error(w, "Bad Request", 400)
 			return
 		}
 		if "" != x.Regexp &&
 			(x.Required || "" != a001) {
 			if ok, e := regexp.MatchString(x.Regexp, a001); nil == e && !ok {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 		}
@@ -266,15 +266,15 @@ func processController(
 			var a002 float64
 			a002, e := strconv.ParseFloat(a001, 64)
 			if nil != e {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			if nil != x.Min && a002 < *x.Min {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			if nil != x.Max && *x.Max < a002 {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			b001 = append(b001, reflect.ValueOf(a002))
@@ -282,15 +282,15 @@ func processController(
 			var a002 int64
 			a002, e := strconv.ParseInt(a001, 10, 64)
 			if nil != e {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			if nil != x.Min && float64(a002) < *x.Min {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			if nil != x.Max && *x.Max < float64(a002) {
-				http.Error(w, "参数错误.", 400)
+				http.Error(w, "Bad Request", 400)
 				return
 			}
 			b001 = append(b001, reflect.ValueOf(a002))

@@ -34,7 +34,7 @@ func (d *domainInterceptor) Process(
 			return true
 		}
 	}
-	http.Error(w, "非法请求", 403)
+	http.Error(w, "Forbidden", 403)
 	return false
 }
 
