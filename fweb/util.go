@@ -24,7 +24,7 @@ func WriteJson(w http.ResponseWriter, data interface{}) ftype.Error {
 }
 
 // 启动服务器
-func Listen(addressAndPort string) error {
+func Listen(addressAndPort string) ftype.Error {
 	flog.Debug("监听 " + addressAndPort)
 	return ferror.New(http.ListenAndServe(addressAndPort, new(Server)))
 }
