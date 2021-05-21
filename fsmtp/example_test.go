@@ -11,7 +11,7 @@ func TestSendMail(t *testing.T) {
 	SendMail(
 		QQ_MAIL_SERVER,
 		"iceyee.studio@qq.com",
-		"ddaulujsexzlbidd",
+		"itxljrntxudubhic",
 		"测试-标题",
 		"测试-内容.",
 		"farmer.person@qq.com",
