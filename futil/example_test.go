@@ -8,6 +8,15 @@ import (
 	//
 )
 
+// func TestInput(t *testing.T) {
+//     var a001 string
+//     var e error
+//     a001, e = Input()
+//     fassert.CheckError(e)
+//     t.Log(a001)
+//     return
+// }
+
 func TestDeleteExpiredKey(t *testing.T) {
 	var a001 map[string]int64
 	a001 = make(map[string]int64, 0xff)
