@@ -21,5 +21,12 @@ func TestCreateMenu(t *testing.T) {
 			"1.One",
 			"2.Two",
 			"3.Three"))
+	t.Log("\n" +
+		CreateMenu(
+			"1.封禁",
+			"2.解封",
+			"3.充值",
+			"4.查询用户",
+			"5.统计数据"))
 	return
 }

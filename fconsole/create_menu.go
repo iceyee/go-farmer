@@ -2,6 +2,7 @@ package fconsole
 
 import (
 	"strings"
+	"unicode/utf8"
 	//
 )
 
@@ -12,8 +13,8 @@ func CreateMenu(items ...string) string {
 	}
 	var maxLength int
 	for _, x := range items {
-		if maxLength < len(x) {
-			maxLength = len(x)
+		if maxLength < getLength(x) {
+			maxLength = getLength(x)
 		}
 	}
 	var a001 string
@@ -22,10 +23,18 @@ func CreateMenu(items ...string) string {
 		a001 += "\n"
 		a001 += "#    "
 		a001 += x
-		a001 += strings.Repeat(" ", maxLength-len(x))
+		a001 += strings.Repeat(" ", maxLength-getLength(x))
 		a001 += "    #"
 	}
 	a001 += "\n"
 	a001 += strings.Repeat("#", 5+maxLength+5)
 	return a001
+}
+
+func getLength(content string) int {
+	var a001 int
+	var a002 int
+	a001 = len(content)
+	a002 = utf8.RuneCountInString(content)
+	return a001 - ((a001 - a002) / 2)
 }
