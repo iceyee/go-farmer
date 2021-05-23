@@ -71,7 +71,7 @@ func init() {
 type defaultController struct {
 }
 
-func (*defaultController) F123() string {
+func (*defaultController) Api_F() string {
 	return `
     @Url /0/api
 
@@ -148,15 +148,15 @@ func (*defaultController) Api(session *Session, w http.ResponseWriter, r *http.R
 	return
 }
 
-func (*defaultController) F456() string {
+func (*defaultController) Status_F() string {
 	return `
-    @Url /0/status
+    @Url            /0/status
 
-    @MapTo Status
+    @MapTo          Status
     `
 }
 
 func (*defaultController) Status(session *Session, w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("ok"))
+	R200(w)
 	return
 }

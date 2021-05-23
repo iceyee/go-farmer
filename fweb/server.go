@@ -1,7 +1,6 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v4/ferror"
 	"github.com/iceyee/go-farmer/v4/flog"
 	"net/http"
 	"strings"
@@ -17,7 +16,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var e error
 	e = r.ParseForm()
 	if nil != e {
-		http.Error(w, ferror.New(e).Error(), 500)
+		R500(w)
 		return
 	}
 	var session *Session
@@ -49,12 +48,19 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if "/" == r.URL.Path {
-		content := `<h3 style="padding: 1em 0; text-align: center;">Author: Farmer</h3>`
+		var Banner string = `<pre>
+  _________         __         _______       ____    ____    _________    _______    
+ |_   ___  |       /  \       |_   __ \     |_   \  /   _|  |_   ___  |  |_   __ \  
+   | |_  \_|      / /\ \        | |__) |      |   \/   |      | |_  \_|    | |__) | 
+   |  _|         / ____ \       |  __ /       | |\  /| |      |  _|  _     |  __ /  
+  _| |_        _/ /    \ \_    _| |  \ \_    _| |_\/_| |_    _| |___/ |   _| |  \ \_
+ |_____|      |____|  |____|  |____| |___|  |_____||_____|  |_________|  |____| |___|
+</pre>`
 		w.Header().Set("Content-Type", "text/html")
-		w.Write([]byte(content))
+		w.Write([]byte(Banner))
 		return
 	} else {
-		http.NotFound(w, r)
+		R404(w)
 		return
 	}
 }

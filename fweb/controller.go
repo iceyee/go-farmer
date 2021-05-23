@@ -13,6 +13,7 @@ import (
 
 var x251 map[string]t184 = make(map[string]t184, 0xfff)
 
+// 注册控制器.
 func RegistryController(controller Controller) {
 	var type001 reflect.Type
 	type001 = reflect.TypeOf(controller)
@@ -229,7 +230,7 @@ func processController(
 	controller t184) {
 
 	if !strings.Contains(controller.Method, r.Method) {
-		http.Error(w, "Method Not Allowed", 405)
+		R405(w)
 		return
 	}
 	var b001 []reflect.Value
@@ -243,20 +244,20 @@ func processController(
 		a001 = r.FormValue(x.Name)
 		a001, _ = url.QueryUnescape(a001)
 		if x.Required && "" == a001 {
-			http.Error(w, "Bad Request", 400)
+			R400(w)
 			return
 		}
 		if "" == a001 {
 			a001 = x.Default
 		}
 		if "" != x.Not && x.Not == a001 {
-			http.Error(w, "Bad Request", 400)
+			R400(w)
 			return
 		}
 		if "" != x.Regexp &&
 			(x.Required || "" != a001) {
 			if ok, e := regexp.MatchString(x.Regexp, a001); nil == e && !ok {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 		}
@@ -266,15 +267,15 @@ func processController(
 			var a002 float64
 			a002, e := strconv.ParseFloat(a001, 64)
 			if nil != e {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			if nil != x.Min && a002 < *x.Min {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			if nil != x.Max && *x.Max < a002 {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			b001 = append(b001, reflect.ValueOf(a002))
@@ -282,15 +283,15 @@ func processController(
 			var a002 int64
 			a002, e := strconv.ParseInt(a001, 10, 64)
 			if nil != e {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			if nil != x.Min && float64(a002) < *x.Min {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			if nil != x.Max && *x.Max < float64(a002) {
-				http.Error(w, "Bad Request", 400)
+				R400(w)
 				return
 			}
 			b001 = append(b001, reflect.ValueOf(a002))

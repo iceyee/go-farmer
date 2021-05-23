@@ -48,3 +48,10 @@ type Interceptor interface {
 	// 处理请求.
 	Process(session *Session, w http.ResponseWriter, r *http.Request) bool
 }
+
+// 可以作为Restful Api的返回结果.
+type T404 struct {
+	Data    interface{}
+	Message string
+	Result  bool
+}

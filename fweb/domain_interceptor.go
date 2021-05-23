@@ -8,8 +8,8 @@ import (
 
 func init() {
 	RegistryInterceptor(new(domainInterceptor))
-	AuthorizeDomain("127.0.0.1")
 	AuthorizeDomain("0.0.0.0")
+	AuthorizeDomain("127.0.0.1")
 	AuthorizeDomain("localhost")
 	return
 }
@@ -34,7 +34,7 @@ func (d *domainInterceptor) Process(
 			return true
 		}
 	}
-	http.Error(w, "Forbidden", 403)
+	R403(w)
 	return false
 }
 
