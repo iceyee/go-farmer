@@ -49,7 +49,15 @@ func deleteOldFile() {
 		if file.IsDir() {
 			continue
 		} else if 1*60*60*24*8 < time.Now().Unix()-file.ModTime().Unix() {
-			os.Remove(file.Name())
+			var a002 string
+			a002 = ffile.Path(
+				ffile.HomeDirectory,
+				"farmer",
+				"share",
+				"farmer-log",
+				projectName,
+				file.Name())
+			os.Remove(a002)
 		}
 	}
 	return
