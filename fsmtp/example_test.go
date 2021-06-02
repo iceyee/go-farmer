@@ -6,6 +6,11 @@ import (
 	//
 )
 
+func TestMailEncode(t *testing.T) {
+	fassert.Assert("1&amp;2&lt;br&gt;" == MailEncode("1&2<br>"))
+	return
+}
+
 func TestSendMail(t *testing.T) {
 	var e error
 	SendMail(
