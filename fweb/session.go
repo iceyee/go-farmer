@@ -18,6 +18,9 @@ var context map[string]t383 = make(map[string]t383, 0xffff)
 // 当前时间戳, 一秒刷新一次.
 var time515 int64 = time.Now().Unix()
 
+// 会话超时.
+var timeout int64 = 1 * 60 * 60 * 24
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
 	// 刷新时间戳.
@@ -29,13 +32,11 @@ func init() {
 	}()
 	// 删除过期的会话.
 	go func() {
-		var oneHour int64
-		oneHour = 1 * 60 * 60
 		for true {
 			var a001 []string
 			a001 = make([]string, 0, 0xffff)
 			for key, value := range context {
-				if oneHour < time515-value.Time {
+				if timeout < time515-value.Time {
 					a001 = append(a001, key)
 				}
 			}
@@ -45,6 +46,12 @@ func init() {
 			time.Sleep(1 * time.Minute)
 		}
 	}()
+	return
+}
+
+// 设置会话超时时间, 比如, 60表示60秒后超时, 默认是一天.
+func SetSessionTimeout(t int64) {
+	timeout = t
 	return
 }
 

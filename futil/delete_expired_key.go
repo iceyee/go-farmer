@@ -44,6 +44,7 @@ func DeleteExpiredKey2(data map[string]T737, expiredTime int64) {
 
 // 功能同DeleteExpiredKey(), value类型必须是int64.
 // 后台线程循环执行, 不用重复调用.
+// 循环执行是不行的, 时间写死, 但是实际是要变的, 所以这接口非常不合理.
 func DeleteExpiredKey3(data *sync.Map, expiredTime int64) {
 	go func() {
 		for true {
@@ -66,6 +67,7 @@ func DeleteExpiredKey3(data *sync.Map, expiredTime int64) {
 
 // 功能同DeleteExpiredKey(), value类型必须是T737.
 // 后台线程循环执行, 不用重复调用.
+// 循环执行是不行的, 时间写死, 但是实际是要变的, 所以这接口非常不合理.
 func DeleteExpiredKey4(data *sync.Map, expiredTime int64) {
 	go func() {
 		for true {
@@ -83,5 +85,37 @@ func DeleteExpiredKey4(data *sync.Map, expiredTime int64) {
 			}
 		}
 	}()
+	return
+}
+
+// 功能同DeleteExpiredKey(), value类型必须是int64.
+func DeleteExpiredKey011(data *sync.Map, expiredTime int64) {
+	var a001 []interface{}
+	a001 = make([]interface{}, 0, 0xfff)
+	data.Range(func(key, value interface{}) bool {
+		if value.(int64) < expiredTime {
+			a001 = append(a001, key)
+		}
+		return true
+	})
+	for _, x := range a001 {
+		data.Delete(x)
+	}
+	return
+}
+
+// 功能同DeleteExpiredKey(), value类型必须是T737.
+func DeleteExpiredKey012(data *sync.Map, expiredTime int64) {
+	var a001 []interface{}
+	a001 = make([]interface{}, 0, 0xfff)
+	data.Range(func(key, value interface{}) bool {
+		if value.(T737).Time < expiredTime {
+			a001 = append(a001, key)
+		}
+		return true
+	})
+	for _, x := range a001 {
+		data.Delete(x)
+	}
 	return
 }
