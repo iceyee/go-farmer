@@ -1,7 +1,7 @@
 package fschedule
 
 import (
-	"github.com/iceyee/go-farmer/v4/futil"
+	"github.com/iceyee/go-farmer/v5/futil"
 	"testing"
 	//
 )

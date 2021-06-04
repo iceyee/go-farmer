@@ -1,16 +1,16 @@
 package fconsole
 
 import (
-	"github.com/iceyee/go-farmer/v4/ferror"
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ferror"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"os"
 	"strings"
 	//
 )
 
 // 从stdin获得输入.
-// @destination - 接收输入的变量.
-// @message - 提示输入.
+// @destination - 接收输入的变量, 可以为空, 空表示输入无所谓.
+// @message - 对输入的提示.
 func Input(destination *string, message string) ftype.Error {
 	if "" != message {
 		println(message)

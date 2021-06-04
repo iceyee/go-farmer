@@ -1,7 +1,7 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"strings"
 	//
 )
@@ -19,14 +19,14 @@ func process(message interface{}) string {
 	case []byte:
 		result = string(message.([]byte))
 	default:
-		result = "[Unkown]"
+		result = "[UNKOWN MESSAGE]"
 	}
 	result = strings.Replace(result, "\n", "\n    ", -1)
 	return result
 }
 
 func Debug(message interface{}) {
-	if DEBUG < logLevel {
+	if L_DEBUG < logLevel {
 		return
 	}
 	var a001 string
@@ -37,7 +37,7 @@ func Debug(message interface{}) {
 
 // message类型支持, string, error, ftype.Stringer, []byte.
 func Info(message interface{}) {
-	if INFO < logLevel {
+	if L_INFO < logLevel {
 		return
 	}
 	var a001 string
@@ -47,7 +47,7 @@ func Info(message interface{}) {
 }
 
 func Warn(message interface{}) {
-	if WARN < logLevel {
+	if L_WARN < logLevel {
 		return
 	}
 	var a001 string
@@ -57,7 +57,7 @@ func Warn(message interface{}) {
 }
 
 func Error(message interface{}) {
-	if ERROR < logLevel {
+	if L_ERROR < logLevel {
 		return
 	}
 	var a001 string
@@ -67,7 +67,7 @@ func Error(message interface{}) {
 }
 
 func Fatal(message interface{}) {
-	if FATAL < logLevel {
+	if L_FATAL < logLevel {
 		return
 	}
 	var a001 string

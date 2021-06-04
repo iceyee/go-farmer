@@ -2,13 +2,21 @@ package futil
 
 import (
 	"sync"
-	"time"
 	//
 )
 
 // 删除过期的键.
-// expiredTime - 过期时间, 时间戳, 单位秒, 小于这个时间的键被删除.
-func DeleteExpiredKey(data map[string]int64, expiredTime int64) {
+// @expiredTime - 过期时间, 时间戳, 单位秒, 小于这个时间的键被删除.
+// @lock - 同步锁, 可以为nil.
+func DeleteExpiredKey(
+	data map[string]int64,
+	expiredTime int64,
+	lock *sync.RWMutex) {
+
+	if nil != lock {
+		lock.Lock()
+		lock.Unlock()
+	}
 	var a001 []string
 	a001 = make([]string, 0, len(data)+1)
 	for key, value := range data {
@@ -28,7 +36,15 @@ type T737 struct {
 }
 
 // 功能同DeleteExpiredKey().
-func DeleteExpiredKey2(data map[string]T737, expiredTime int64) {
+func DeleteExpiredKey2(
+	data map[string]T737,
+	expiredTime int64,
+	lock *sync.RWMutex) {
+
+	if nil != lock {
+		lock.Lock()
+		lock.Unlock()
+	}
 	var a001 []string
 	a001 = make([]string, 0, len(data)+1)
 	for key, value := range data {
@@ -38,84 +54,6 @@ func DeleteExpiredKey2(data map[string]T737, expiredTime int64) {
 	}
 	for _, value := range a001 {
 		delete(data, value)
-	}
-	return
-}
-
-// 功能同DeleteExpiredKey(), value类型必须是int64.
-// 后台线程循环执行, 不用重复调用.
-// 循环执行是不行的, 时间写死, 但是实际是要变的, 所以这接口非常不合理.
-func DeleteExpiredKey3(data *sync.Map, expiredTime int64) {
-	go func() {
-		for true {
-			time.Sleep(1 * time.Minute)
-			var a001 []interface{}
-			a001 = make([]interface{}, 0, 0xfff)
-			data.Range(func(key, value interface{}) bool {
-				if value.(int64) < expiredTime {
-					a001 = append(a001, key)
-				}
-				return true
-			})
-			for _, x := range a001 {
-				data.Delete(x)
-			}
-		}
-	}()
-	return
-}
-
-// 功能同DeleteExpiredKey(), value类型必须是T737.
-// 后台线程循环执行, 不用重复调用.
-// 循环执行是不行的, 时间写死, 但是实际是要变的, 所以这接口非常不合理.
-func DeleteExpiredKey4(data *sync.Map, expiredTime int64) {
-	go func() {
-		for true {
-			time.Sleep(1 * time.Minute)
-			var a001 []interface{}
-			a001 = make([]interface{}, 0, 0xfff)
-			data.Range(func(key, value interface{}) bool {
-				if value.(T737).Time < expiredTime {
-					a001 = append(a001, key)
-				}
-				return true
-			})
-			for _, x := range a001 {
-				data.Delete(x)
-			}
-		}
-	}()
-	return
-}
-
-// 功能同DeleteExpiredKey(), value类型必须是int64.
-func DeleteExpiredKey011(data *sync.Map, expiredTime int64) {
-	var a001 []interface{}
-	a001 = make([]interface{}, 0, 0xfff)
-	data.Range(func(key, value interface{}) bool {
-		if value.(int64) < expiredTime {
-			a001 = append(a001, key)
-		}
-		return true
-	})
-	for _, x := range a001 {
-		data.Delete(x)
-	}
-	return
-}
-
-// 功能同DeleteExpiredKey(), value类型必须是T737.
-func DeleteExpiredKey012(data *sync.Map, expiredTime int64) {
-	var a001 []interface{}
-	a001 = make([]interface{}, 0, 0xfff)
-	data.Range(func(key, value interface{}) bool {
-		if value.(T737).Time < expiredTime {
-			a001 = append(a001, key)
-		}
-		return true
-	})
-	for _, x := range a001 {
-		data.Delete(x)
 	}
 	return
 }

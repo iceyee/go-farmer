@@ -1,7 +1,7 @@
 package ferror
 
 import (
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"runtime/debug"
 	//
 )
@@ -10,7 +10,7 @@ type FarmerError struct {
 	message string
 }
 
-// @message - 支持类型string, error, ftype.Stringer, []byte.
+// @message - 支持类型包括, string, error, ftype.Stringer, []byte.
 func New(message interface{}) *FarmerError {
 	var e *FarmerError
 	e = new(FarmerError)
@@ -25,7 +25,7 @@ func New(message interface{}) *FarmerError {
 	case []byte:
 		e.message = string(message.([]byte))
 	default:
-		e.message = ""
+		e.message = "[UNKWON MESSAGE]"
 	}
 	e.message += "\n"
 	e.message += string(debug.Stack())

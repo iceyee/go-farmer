@@ -1,7 +1,7 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v5/flog"
 	"net/http"
 	"net/url"
 	"reflect"
@@ -44,6 +44,10 @@ func RegistryController(controller Controller) {
 				continue
 			}
 			if strings.HasPrefix(y, "@Constraints ") {
+				y += "    "
+				y = strings.Replace(y, "||", "|   |", -1)
+				y = strings.Replace(y, "| |", "|   |", -1)
+				y = strings.Replace(y, "|  |", "|   |", -1)
 				var a005 []string = strings.Split(y, " | ")
 				if len(a005) < 6 {
 					panic("定义错误.\n" + type001.String() + "\n" + method.Name + "\n" + y)
@@ -108,6 +112,10 @@ func RegistryController(controller Controller) {
 				b001.Method =
 					strings.Trim(strings.Join(a005[1:], " "), " \t\r\n")
 			} else if strings.HasPrefix(y, "@Parameter ") {
+				y += "    "
+				y = strings.Replace(y, "||", "|   |", -1)
+				y = strings.Replace(y, "| |", "|   |", -1)
+				y = strings.Replace(y, "|  |", "|   |", -1)
 				var a005 []string = strings.Split(y, " | ")
 				if len(a005) < 6 {
 					panic("定义错误.\n" + type001.String() + "\n" + method.Name + "\n" + y)
@@ -183,19 +191,12 @@ func RegistryController(controller Controller) {
 		}
 		var a009 string = `^func\([^,]+,\*fweb.Session,http.ResponseWriter,\*http.Request`
 		for _, value := range b001.Parameters {
-			if "string" != value.Type &&
-				"" == value.Default &&
-				!value.Required {
-
-				println("非string类型, 必须require和default二选一.")
-				panic("定义错误.\n" + type001.String() + "\n" + method.Name)
-			}
 			if "float64" == value.Type {
-				a009 += ",float64"
+				a009 += `,\*float64`
 			} else if "int64" == value.Type {
-				a009 += ",int64"
+				a009 += `,\*int64`
 			} else if "string" == value.Type {
-				a009 += ",string"
+				a009 += `,\*string`
 				if nil != value.Max || nil != value.Min {
 					println("string类型的参数不能有min或max.")
 					panic("定义错误.\n" + type001.String() + "\n" + method.Name)
@@ -218,7 +219,7 @@ func RegistryController(controller Controller) {
 		}
 		b001.SortKey = type001.String() + method.Name
 		x251[b001.Url] = b001
-		flog.Debug("Controller, " + b001.Url)
+		flog.Debug("RegistryController, " + b001.Url)
 	}
 	return
 }
@@ -230,7 +231,11 @@ func processController(
 	controller t184) {
 
 	if !strings.Contains(controller.Method, r.Method) {
-		R405(w)
+		if M_PLAIN == mode {
+			R405(w)
+		} else if M_JSON == mode {
+			J405(w)
+		}
 		return
 	}
 	var b001 []reflect.Value
@@ -244,57 +249,116 @@ func processController(
 		a001 = r.FormValue(x.Name)
 		a001, _ = url.QueryUnescape(a001)
 		if x.Required && "" == a001 {
-			R400(w)
+			if M_PLAIN == mode {
+				R400(w)
+			} else if M_JSON == mode {
+				J400(w)
+			}
 			return
 		}
 		if "" == a001 {
 			a001 = x.Default
 		}
 		if "" != x.Not && x.Not == a001 {
-			R400(w)
+			if M_PLAIN == mode {
+				R400(w)
+			} else if M_JSON == mode {
+				J400(w)
+			}
 			return
 		}
-		if "" != x.Regexp &&
-			(x.Required || "" != a001) {
+		if "" != x.Regexp && "" != a001 {
 			if ok, e := regexp.MatchString(x.Regexp, a001); nil == e && !ok {
-				R400(w)
+				if M_PLAIN == mode {
+					R400(w)
+				} else if M_JSON == mode {
+					J400(w)
+				}
 				return
 			}
 		}
 		if "string" == x.Type {
-			b001 = append(b001, reflect.ValueOf(a001))
+			if "" == a001 {
+				var a002 *string
+				b001 = append(b001, reflect.ValueOf(a002))
+			} else {
+				var a002 *string
+				a002 = new(string)
+				*a002 = a001
+				b001 = append(b001, reflect.ValueOf(a002))
+			}
 		} else if "float64" == x.Type {
-			var a002 float64
-			a002, e := strconv.ParseFloat(a001, 64)
-			if nil != e {
-				R400(w)
-				return
+			if "" == a001 {
+				var a003 *float64
+				b001 = append(b001, reflect.ValueOf(a003))
+			} else {
+				var a002 float64
+				a002, e := strconv.ParseFloat(a001, 64)
+				if nil != e {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				if nil != x.Min && a002 < *x.Min {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				if nil != x.Max && *x.Max < a002 {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				var a003 *float64
+				a003 = new(float64)
+				*a003 = a002
+				b001 = append(b001, reflect.ValueOf(a003))
 			}
-			if nil != x.Min && a002 < *x.Min {
-				R400(w)
-				return
-			}
-			if nil != x.Max && *x.Max < a002 {
-				R400(w)
-				return
-			}
-			b001 = append(b001, reflect.ValueOf(a002))
 		} else if "int64" == x.Type {
-			var a002 int64
-			a002, e := strconv.ParseInt(a001, 10, 64)
-			if nil != e {
-				R400(w)
-				return
+			if "" == a001 {
+				var a003 *int64
+				b001 = append(b001, reflect.ValueOf(a003))
+			} else {
+				var a002 int64
+				a002, e := strconv.ParseInt(a001, 10, 64)
+				if nil != e {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				if nil != x.Min && float64(a002) < *x.Min {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				if nil != x.Max && *x.Max < float64(a002) {
+					if M_PLAIN == mode {
+						R400(w)
+					} else if M_JSON == mode {
+						J400(w)
+					}
+					return
+				}
+				var a003 *int64
+				a003 = new(int64)
+				*a003 = a002
+				b001 = append(b001, reflect.ValueOf(a003))
 			}
-			if nil != x.Min && float64(a002) < *x.Min {
-				R400(w)
-				return
-			}
-			if nil != x.Max && *x.Max < float64(a002) {
-				R400(w)
-				return
-			}
-			b001 = append(b001, reflect.ValueOf(a002))
 		}
 	}
 	controller.MapTo.Call(b001)

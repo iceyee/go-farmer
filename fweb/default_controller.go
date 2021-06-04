@@ -157,6 +157,10 @@ func (*defaultController) Status_F() string {
 }
 
 func (*defaultController) Status(session *Session, w http.ResponseWriter, r *http.Request) {
-	R200(w)
+	if M_PLAIN == mode {
+		R200(w)
+	} else if M_JSON == mode {
+		J200(w)
+	}
 	return
 }

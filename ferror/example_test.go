@@ -10,7 +10,7 @@ func TestFarmerError(t *testing.T) {
 	return
 }
 
-func Example() {
+func ExampleFarmerError() {
 	println(New("hello world.").Error())
 	return
 }

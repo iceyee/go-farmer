@@ -1,3 +1,3 @@
-module github.com/iceyee/go-farmer/v4
+module github.com/iceyee/go-farmer/v5
 
 go 1.16

@@ -31,7 +31,7 @@ func init() {
 // 刷新显示的时间.
 func refreshTime() {
 	for true {
-		time.Sleep(10 * time.Millisecond)
+		time.Sleep(33 * time.Millisecond)
 		go func() {
 			var time001 time.Time
 			time001 = time.Now()
@@ -45,8 +45,7 @@ func refreshTime() {
 					time001.Day(),
 					time001.Hour(),
 					time001.Minute(),
-					time001.Second(),
-				)
+					time001.Second())
 			time355 = a001
 		}()
 	}

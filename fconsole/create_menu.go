@@ -31,10 +31,11 @@ func CreateMenu(items ...string) string {
 	return a001
 }
 
+// 中文是一个字占三个字节, 显示宽度占两个字母的宽度.
 func getLength(content string) int {
 	var a001 int
 	var a002 int
 	a001 = len(content)
 	a002 = utf8.RuneCountInString(content)
-	return a001 - ((a001 - a002) / 2)
+	return (a001 + a002) / 2
 }

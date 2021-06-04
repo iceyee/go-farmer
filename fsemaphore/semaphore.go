@@ -24,8 +24,8 @@ func (s *Semaphore) Acquire() {
 	return
 }
 
-func (s *Semaphore) AcquireN(n int) {
-	for x := 0; x < n; x++ {
+func (s *Semaphore) AcquireN(n int64) {
+	for x := int64(0); x < n; x++ {
 		<-s.channel
 	}
 	return
@@ -52,15 +52,5 @@ func (s *Semaphore) TryAcquire() bool {
 		return false
 	}
 	<-s.channel
-	return true
-}
-
-func (s *Semaphore) TryAcquireN(n int64) bool {
-	for x := int64(0); x < n; x++ {
-		if int64(len(s.channel)) < n-x {
-			return false
-		}
-		<-s.channel
-	}
 	return true
 }

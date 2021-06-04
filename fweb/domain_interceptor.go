@@ -1,6 +1,7 @@
 package fweb
 
 import (
+	"github.com/iceyee/go-farmer/v5/flog"
 	"net/http"
 	"strings"
 	//
@@ -34,12 +35,17 @@ func (d *domainInterceptor) Process(
 			return true
 		}
 	}
-	R403(w)
+	if M_PLAIN == mode {
+		R403(w)
+	} else if M_JSON == mode {
+		J403(w)
+	}
 	return false
 }
 
 // 域名授权, 只能通过授权域名来访问web.
 func AuthorizeDomain(domain string) {
+	flog.Debug("授权域名, " + domain)
 	domains = append(domains, domain)
 	return
 }

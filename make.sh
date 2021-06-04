@@ -13,7 +13,7 @@ case $1 in
         mkdir -p /tmp/go-farmer/src
         cp -r * /tmp/go-farmer
         SCREEN_NAME="godoc-develop"
-        SCREEN_COMMAND="godoc -http=:8081 -goroot=/tmp/go-farmer \n"
+        SCREEN_COMMAND="godoc -http=:8083 -goroot=/tmp/go-farmer \n"
         SCREEN_ID=$(screen -ls | awk "/$SCREEN_NAME/ {print \$1}" | awk -F '.' '{print $1}')
         [ "$SCREEN_ID" ] && kill $SCREEN_ID && sleep 1
         screen -dmS "$SCREEN_NAME" && sleep 1

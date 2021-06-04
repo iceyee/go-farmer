@@ -1,7 +1,7 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v5/flog"
 	"math/rand"
 	"time"
 	//

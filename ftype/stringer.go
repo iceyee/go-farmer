@@ -4,7 +4,7 @@ import (
 //
 )
 
-// Stringer. 与fmt.Stringer兼容.
+// Stringer. 与fmt.Stringer完全相同.
 type Stringer interface {
 	String() string
 }

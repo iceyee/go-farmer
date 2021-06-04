@@ -1,7 +1,7 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v5/flog"
 	"net/http"
 	"strings"
 	//
@@ -16,7 +16,11 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	var e error
 	e = r.ParseForm()
 	if nil != e {
-		R500(w)
+		if M_PLAIN == mode {
+			R500(w)
+		} else if M_JSON == mode {
+			J500(w)
+		}
 		return
 	}
 	var session *Session
@@ -48,19 +52,25 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if "/" == r.URL.Path {
-		var Banner string = `<pre>
+		var Banner string = `
+<pre>
   _________         __         _______       ____    ____    _________    _______    
  |_   ___  |       /  \       |_   __ \     |_   \  /   _|  |_   ___  |  |_   __ \  
    | |_  \_|      / /\ \        | |__) |      |   \/   |      | |_  \_|    | |__) | 
    |  _|         / ____ \       |  __ /       | |\  /| |      |  _|  _     |  __ /  
   _| |_        _/ /    \ \_    _| |  \ \_    _| |_\/_| |_    _| |___/ |   _| |  \ \_
  |_____|      |____|  |____|  |____| |___|  |_____||_____|  |_________|  |____| |___|
-</pre>`
+</pre>
+`
 		w.Header().Set("Content-Type", "text/html")
 		w.Write([]byte(Banner))
 		return
 	} else {
-		R404(w)
+		if M_PLAIN == mode {
+			R404(w)
+		} else if M_JSON == mode {
+			J404(w)
+		}
 		return
 	}
 }

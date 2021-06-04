@@ -17,12 +17,16 @@
    @Parameter | [name] | [type] | [required] | [default] | [description]
    @Constraints | [name] | [min] | [max] | [not] | [regexp]
 */
-// @Parameter和@Constraints是用' | '分隔, 如果要某个留空, 那么就应该'|  |',
-// 中间要留够位置, 不然会出现非预期的情况.
-//
-// 对于非string类型, [required]和[default]必须二选一.
 //
 // @Url和@MapTo是必须的, 不然会报错.
+//
+// @Parameter和@Constraints是用' | '分隔.
+//
+// [type]: string, int64, float64.
+//
+// [regexp]: 应该尽量避免出现'||', 因为这个会被特殊处理.
+//
+// 如果url参数为空, 则对应的入参指针也是nil.
 //
 // 示例代码
 //
@@ -34,7 +38,11 @@
        return true
    }
 
-   func (*A) Process(session *Session, w http.ResponseWriter, r *http.Request) bool {
+   func (*A) Process(
+       session *Session,
+       w http.ResponseWriter,
+       r *http.Request) bool {
+
        if "DELETE" == r.Method {
            r.Method = "GET"
        }
@@ -44,49 +52,59 @@
    type B struct {
    }
 
-   func (*B) F123() string {
+   func (*B) Test__() string {
        return `
-       @Description 这是描述
+          @Url /test
 
-       @MapTo Test
+          @MapTo Test
 
-       @Method GET
+          @Method GET
 
-       @Remarks 备注
+          @Description 这是描述
 
-       @Response 响应说明
+          @Response 响应说明
 
-       @Url /test
+          @Remarks 备注
 
-       @Parameter | A | int64 | 1 |  | 这是A
-       @Constraints | A | 0 | 100 | 50 |
+          @Parameter | A | int64 | 1 |   | 这是A
+          @Constraints | A | 0 | 100 | 50 |
 
-       @Parameter | B | float64 |  | 1 | 这是B
-       @Constraints | B | 0 | 100 | 50 |
+          @Parameter | B | float64 |   | 1 | 这是B
+          @Constraints | B | 0 | 100 | 50 |
 
-       @Parameter | C | string | 1 |  | 这是C
-       @Constraints | C |  |  | 50 | hello
-       `
+          @Parameter | C | string | 1 |   | 这是C
+          @Constraints | C |   |   | 50 | hello
+
+          @Parameter | D | int64 |   |   | 这是D
+          @Constraints | D |   |   |   |
+          `
    }
 
    type t struct {
        A int64
        B float64
        C string
+       D int64
    }
 
    func (*B) Test(
-       session *fweb.Session,
+       session *Session,
        w http.ResponseWriter,
        r *http.Request,
-       A int64,
-       B float64,
-       C string) {
+       A *int64,
+       B *float64,
+       C *string,
+       D *int64) {
 
        a := t{
-           A: A,
-           B: B,
-           C: C,
+           A: *A,
+           B: *B,
+           C: *C,
+       }
+       if nil == D {
+           a.D = -1
+       } else {
+           a.D = *D
        }
        WriteJson(w, a)
        return
@@ -96,7 +114,7 @@
        RegistryInterceptor(new(A))
        RegistryController(new(B))
        RegistryFileServer("/", "/tmp/")
-       Listen(":9999")
+       panic(Listen(":9999"))
    }
 */
 package fweb

@@ -2,10 +2,10 @@ package fsmtp
 
 import (
 	"fmt"
-	"github.com/iceyee/go-farmer/v4/ferror"
-	"github.com/iceyee/go-farmer/v4/flog"
-	"github.com/iceyee/go-farmer/v4/fstrings"
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ferror"
+	"github.com/iceyee/go-farmer/v5/flog"
+	"github.com/iceyee/go-farmer/v5/fstrings"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"net/smtp"
 	"strings"
 	//
@@ -20,6 +20,7 @@ func SendMail(
 	content string,
 	to ...string) ftype.Error {
 
+	subject = strings.Replace(subject, "\n", "    ", -1)
 	var sb001 *fstrings.StringBuffer
 	sb001 = fstrings.NewStringBuffer()
 	sb001.Append("Content-Type: text/html; charset=UTF-8; \r\n")
@@ -68,5 +69,4 @@ func SendMail(
 		e = ferror.New(e)
 	}
 	return e
-	// TODO
 }

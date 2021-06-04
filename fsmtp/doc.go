@@ -1,4 +1,4 @@
-// 邮箱相关.
+// smtp服务.
 package fsmtp
 
 import (

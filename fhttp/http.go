@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/iceyee/go-farmer/v4/ferror"
-	"github.com/iceyee/go-farmer/v4/flog"
-	"github.com/iceyee/go-farmer/v4/fstrings"
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ferror"
+	"github.com/iceyee/go-farmer/v5/flog"
+	"github.com/iceyee/go-farmer/v5/fstrings"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -46,6 +46,31 @@ func New() *Http {
 	return h
 }
 
+func (h *Http) GetError() ftype.Error {
+	return h.e
+}
+
+func (h *Http) GetResponseBody() []byte {
+	return h.responseBody
+}
+
+func (h *Http) GetResponseHeader() map[string][]string {
+	return h.responseHeader
+}
+
+func (h *Http) GetStatusCode() int {
+	return h.statusCode
+}
+
+// 初始化, 同New()的效果一样.
+func (h *Http) Initial() {
+	H := New()
+	var tmp = *h
+	*h = *H
+	*H = tmp
+	return
+}
+
 func (h *Http) SetBody(body []byte) {
 	h.body = body
 	return
@@ -61,6 +86,12 @@ func (h *Http) SetMethod(method string) {
 	return
 }
 
+// @proxy: 可以为空, 或完整的代理, 如"socks5://[user:password@]hk.farmer.ink:10002".
+func (h *Http) SetProxy(proxy string) {
+	h.proxy = proxy
+	return
+}
+
 // 设置超时, 单位:毫秒.
 func (h *Http) SetTimeout(timeout int64) {
 	if 0 < timeout {
@@ -69,32 +100,10 @@ func (h *Http) SetTimeout(timeout int64) {
 	return
 }
 
-// @proxy: "", 或完整的代理, 如"socks5://[user:password@]hk.farmer.ink:10002".
-func (h *Http) SetProxy(proxy string) {
-	h.proxy = proxy
-	return
-}
-
 // 设置访问链接, (必须).
 func (h *Http) SetUrl(url string) {
 	h.url = url
 	return
-}
-
-func (h *Http) GetError() ftype.Error {
-	return h.e
-}
-
-func (h *Http) GetStatusCode() int {
-	return h.statusCode
-}
-
-func (h *Http) GetResponseHeader() map[string][]string {
-	return h.responseHeader
-}
-
-func (h *Http) GetResponseBody() []byte {
-	return h.responseBody
 }
 
 // 发起请求, 其中URL是必须填的, 如果返回false, 则表示发生异常, 可以调用.GetError()获取异常.
@@ -112,6 +121,7 @@ func (h *Http) Request() bool {
 	sb001.Append(fmt.Sprintf("%v", h.header))
 	sb001.Append("\nTimeout: ")
 	sb001.Append(h.timeout)
+	sb001.Append("ms")
 	sb001.Append("\nProxy: ")
 	sb001.Append(h.proxy)
 	sb001.Append("\n")
@@ -160,7 +170,7 @@ func (h *Http) Request() bool {
 		ip3 := fmt.Sprintf("%s, %s", ip1, ip2)
 		request001.Header.Set("X-Forwarded-For", ip3)
 	}
-	if nil != h.body {
+	if "POST" == h.method && nil == h.body {
 		request001.Header.Set(
 			"Content-Length",
 			strconv.FormatInt(int64(len(h.body)), 10))

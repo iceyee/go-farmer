@@ -73,12 +73,6 @@ func Schedule(
 					var a007 int64
 					a006, _ = strconv.ParseInt(a005[1], 10, 64)
 					a007, _ = strconv.ParseInt(a005[2], 10, 64)
-					if a007 < a006 ||
-						a006 < min ||
-						max < a007 {
-
-						panic("Schedule语法错误.")
-					}
 					for y := a006; y <= a007; y++ {
 						a002 = append(a002, y)
 					}
@@ -100,12 +94,6 @@ func Schedule(
 					a006, _ = strconv.ParseInt(a005[1], 10, 64)
 					a007, _ = strconv.ParseInt(a005[2], 10, 64)
 					a008, _ = strconv.ParseInt(a005[3], 10, 64)
-					if a007 < a006 ||
-						a006 < min ||
-						max < a007 {
-
-						panic("Schedule语法错误.")
-					}
 					for y := a006; y <= a007; {
 						a002 = append(a002, y)
 						y += a008

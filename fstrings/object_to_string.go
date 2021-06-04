@@ -152,7 +152,7 @@ func mapToString(b *bytes.Buffer, v reflect.Value) {
 		if b.Cap() <= b.Len()+0xf {
 			b.Grow(0xff)
 		}
-		bufferAppend(b, " $")
+		bufferAppend(b, " @")
 		objectToString(b, key)
 		bufferAppend(b, "=")
 		objectToString(b, v2)
@@ -184,7 +184,7 @@ func stringToString(b *bytes.Buffer, v reflect.Value) {
 
 func structToString(b *bytes.Buffer, v reflect.Value) {
 	if name := v.Type().Name(); "" == name {
-		bufferAppend(b, "[Anonymous] {")
+		bufferAppend(b, "[Struct] {")
 	} else {
 		bufferAppend(b, name)
 		bufferAppend(b, " {")
@@ -198,7 +198,7 @@ func structToString(b *bytes.Buffer, v reflect.Value) {
 		}
 		var v2 reflect.Value
 		v2 = v.FieldByName(field.Name)
-		bufferAppend(b, " $")
+		bufferAppend(b, " @")
 		bufferAppend(b, field.Name)
 		bufferAppend(b, "=")
 		objectToString(b, v2)

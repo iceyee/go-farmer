@@ -12,8 +12,8 @@ func TestLog(t *testing.T) {
 	Error("hello world.")
 	Fatal("hello world.")
 
-	SetLogLevel(INFO)
-	SetProjectName("TEST", F_WARN|F_FATAL)
+	SetLogLevel(L_INFO)
+	SetProjectName("GO-FARMER", F_WARN|F_FATAL)
 	Debug("hello world.")
 	Info("hello world.")
 	Warn("hello world.")
@@ -29,8 +29,8 @@ func Example() {
 	Error("hello world.")
 	Fatal("hello world.")
 
-	SetLogLevel(INFO)
-	SetProjectName("TEST", F_WARN|F_FATAL)
+	SetLogLevel(L_INFO)
+	SetProjectName("GO-FARMER", F_WARN|F_FATAL)
 	Debug("hello world.")
 	Info("hello world.")
 	Warn("hello world.")

@@ -1,8 +1,8 @@
 package ffile
 
 import (
-	"github.com/iceyee/go-farmer/v4/ferror"
-	"github.com/iceyee/go-farmer/v4/ftype"
+	"github.com/iceyee/go-farmer/v5/ferror"
+	"github.com/iceyee/go-farmer/v5/ftype"
 	"io/ioutil"
 	//
 )

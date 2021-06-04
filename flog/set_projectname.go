@@ -1,7 +1,7 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v4/ffile"
+	"github.com/iceyee/go-farmer/v5/ffile"
 	"io"
 	"os"
 	//

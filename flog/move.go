@@ -2,8 +2,8 @@ package flog
 
 import (
 	"fmt"
-	"github.com/iceyee/go-farmer/v4/ffile"
-	"github.com/iceyee/go-farmer/v4/fschedule"
+	"github.com/iceyee/go-farmer/v5/ffile"
+	"github.com/iceyee/go-farmer/v5/fschedule"
 	"io"
 	"os"
 	"time"

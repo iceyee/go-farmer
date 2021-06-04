@@ -6,17 +6,8 @@ import (
 	//
 )
 
-// 日志等级.
+// 日志等级. 低于这个等级的不会输出.
 type LogLevel int64
-
-const (
-	DEBUG LogLevel = iota
-	INFO
-	WARN
-	ERROR
-	FATAL
-	NONE
-)
 
 const (
 	L_DEBUG LogLevel = iota
@@ -39,7 +30,7 @@ const (
 )
 
 var logFlag LogFlag
-var logLevel LogLevel = DEBUG
+var logLevel LogLevel = L_DEBUG
 var projectName string
 var time355 *string = new(string)
 

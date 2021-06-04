@@ -3,10 +3,11 @@ package fsql
 import (
 	"context"
 	"database/sql"
-	"github.com/iceyee/go-farmer/v4/flog"
-	"github.com/iceyee/go-farmer/v4/fstrings"
+	"github.com/iceyee/go-farmer/v5/flog"
+	"github.com/iceyee/go-farmer/v5/fstrings"
 	"reflect"
 	"strings"
+	"time"
 	//
 )
 
@@ -146,5 +147,11 @@ func NewRepository(db *sql.DB, entity Entity) *Repository {
 	sb001.Append("\n")
 	sb001.Append(r.sqlWhere)
 	flog.Debug(sb001)
+	go func() {
+		for true {
+			time.Sleep(1 * time.Minute)
+			r.Ping()
+		}
+	}()
 	return r
 }

@@ -16,7 +16,7 @@ func Assert(condition bool, message ...string) {
 		println(a001 + " - 通过.")
 	} else {
 		println(a001 + " - 不通过.")
-		panic(condition)
+		panic(0)
 	}
 	return
 }

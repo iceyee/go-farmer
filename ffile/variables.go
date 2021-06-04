@@ -13,7 +13,7 @@ var HomeDirectory string
 var PathSeparator string = string(os.PathSeparator)
 
 // 多路径分隔符.
-// 如, linux下是':'.
+// 比如, linux下是':'.
 var PathListSeparator string = string(os.PathListSeparator)
 
 func init() {

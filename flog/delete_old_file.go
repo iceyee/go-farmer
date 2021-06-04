@@ -1,8 +1,8 @@
 package flog
 
 import (
-	"github.com/iceyee/go-farmer/v4/ffile"
-	"github.com/iceyee/go-farmer/v4/fschedule"
+	"github.com/iceyee/go-farmer/v5/ffile"
+	"github.com/iceyee/go-farmer/v5/fschedule"
 	"os"
 	"time"
 	//
@@ -13,12 +13,13 @@ func init() {
 		"1 0 * * *",
 		1000,
 		true,
-		deleteOldFile,
-	)
+		deleteOldFile)
 	return
 }
 
-// 删除7-8天前的文件.
+var x393 int64 = 8
+
+// 删除几天前的文件, 默认8天.
 func deleteOldFile() {
 	if "" == projectName {
 		return
@@ -48,7 +49,7 @@ func deleteOldFile() {
 	for _, file := range files {
 		if file.IsDir() {
 			continue
-		} else if 1*60*60*24*8 < time.Now().Unix()-file.ModTime().Unix() {
+		} else if 1*60*60*24*x393 < time.Now().Unix()-file.ModTime().Unix() {
 			var a002 string
 			a002 = ffile.Path(
 				ffile.HomeDirectory,
@@ -60,5 +61,11 @@ func deleteOldFile() {
 			os.Remove(a002)
 		}
 	}
+	return
+}
+
+// 设定, 要保留几天, 默认8天.
+func SetSaveDays(a int64) {
+	x393 = a
 	return
 }

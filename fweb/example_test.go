@@ -1,8 +1,8 @@
 package fweb
 
 import (
-	"github.com/iceyee/go-farmer/v4/fhttp"
-	"github.com/iceyee/go-farmer/v4/flog"
+	"github.com/iceyee/go-farmer/v5/fhttp"
+	"github.com/iceyee/go-farmer/v5/flog"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -16,7 +16,11 @@ func (*A) Filter(path string) bool {
 	return true
 }
 
-func (*A) Process(session *Session, w http.ResponseWriter, r *http.Request) bool {
+func (*A) Process(
+	session *Session,
+	w http.ResponseWriter,
+	r *http.Request) bool {
+
 	if "DELETE" == r.Method {
 		r.Method = "GET"
 	}
@@ -26,49 +30,59 @@ func (*A) Process(session *Session, w http.ResponseWriter, r *http.Request) bool
 type B struct {
 }
 
-func (*B) F123() string {
+func (*B) Test__() string {
 	return `
-    @Description 这是描述
+       @Url /test
 
-    @MapTo Test
+       @MapTo Test
 
-    @Method GET
+       @Method GET
 
-    @Remarks 备注
+       @Description 这是描述
 
-    @Response 响应说明
+       @Response 响应说明
 
-    @Url /test
+       @Remarks 备注
 
-    @Parameter | A | int64 | 1 |  | 这是A
-    @Constraints | A | 0 | 100 | 50 |  
+       @Parameter | A | int64 | 1 |   | 这是A
+       @Constraints | A | 0 | 100 | 50 |
 
-    @Parameter | B | float64 |  | 1 | 这是B
-    @Constraints | B | 0 | 100 | 50 |  
+       @Parameter | B | float64 |   | 1 | 这是B
+       @Constraints | B | 0 | 100 | 50 |
 
-    @Parameter | C | string | 1 |  | 这是C
-    @Constraints | C |  |  | 50 | hello
-    `
+       @Parameter | C | string | 1 |   | 这是C
+       @Constraints | C |   |   | 50 | hello
+
+       @Parameter | D | int64 |   |   | 这是D
+       @Constraints | D |   |   |   |
+       `
 }
 
 type t struct {
 	A int64
 	B float64
 	C string
+	D int64
 }
 
 func (*B) Test(
 	session *Session,
 	w http.ResponseWriter,
 	r *http.Request,
-	A int64,
-	B float64,
-	C string) {
+	A *int64,
+	B *float64,
+	C *string,
+	D *int64) {
 
 	a := t{
-		A: A,
-		B: B,
-		C: C,
+		A: *A,
+		B: *B,
+		C: *C,
+	}
+	if nil == D {
+		a.D = -1
+	} else {
+		a.D = *D
 	}
 	WriteJson(w, a)
 	return
@@ -79,6 +93,7 @@ func TestRegistryController(t *testing.T) {
 	RegistryInterceptor(new(A))
 	RegistryController(new(B))
 	RegistryFileServer("/", "/tmp/")
+	SetResponseMode(M_JSON)
 	var server = httptest.NewServer(new(Server))
 	defer server.Close()
 	var h *fhttp.Http
@@ -136,5 +151,5 @@ func test(t *testing.T) {
 	RegistryInterceptor(new(A))
 	RegistryController(new(B))
 	RegistryFileServer("/", "/tmp/")
-	Listen(":9999")
+	panic(Listen(":9999"))
 }
