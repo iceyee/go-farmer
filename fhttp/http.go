@@ -170,7 +170,7 @@ func (h *Http) Request() bool {
 		ip3 := fmt.Sprintf("%s, %s", ip1, ip2)
 		request001.Header.Set("X-Forwarded-For", ip3)
 	}
-	if "POST" == h.method && nil == h.body {
+	if "POST" == h.method && nil != h.body {
 		request001.Header.Set(
 			"Content-Length",
 			strconv.FormatInt(int64(len(h.body)), 10))
