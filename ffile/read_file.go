@@ -10,10 +10,10 @@ import (
 // 读文件.
 func ReadFile(filename string) ([]byte, ftype.Error) {
 	var content []byte
-	var e ftype.Error
+	var e error
 	content, e = ioutil.ReadFile(filename)
 	if nil != e {
-		e = ferror.New(e)
+		return nil, ferror.New(e)
 	}
-	return content, e
+	return content, nil
 }
