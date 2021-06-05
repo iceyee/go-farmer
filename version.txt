@@ -1,0 +1,4 @@
+- v5.1.0
+添加接口,
+ffile.ReadFileJson().
+ffile.WriteFileJson().
